@@ -1,5 +1,5 @@
 ================================================
-KLILO - Scientific Compute Container Spec Parser
+KLIKO - Scientific Compute Container Spec Parser
 ================================================
 
 About
