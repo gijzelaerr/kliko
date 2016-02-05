@@ -26,7 +26,8 @@ The specification
 -----------------
 
  * All is based on standard docker containers
- * Container mush have a /run.sh script, which will be used as the entrypoint command to start the container.
+ * Container mush have a CMD specified, which would be the main program of the container. It should not require arguments.
+ * logging should be written to STDOUT and STDERR.
  * We define two types of compute containers, split IO and joined IO containers.
  * For split IO Input files will be mounted read only into /input. Output file should be written to /output, which will
    be mounted by the host.
@@ -35,6 +36,26 @@ The specification
  * Which parameters the container will aceept should be defined in a yaml file /para_def.yml
  * The parameters definition (para_def.yml) file should follow the schema defined in kliko/schema.yml.
  * an example parameters definition file can be found in examples/form.yml
+ * fields with type file will enable supply of custom input files. these will be put in the /input folder.
 
 
+Example
+-------
+
+There is an example in examples/form.yml
+
+
+Django
+------
+
+In kliko.django_form there is a function that can automatically generate a Django form from a parsed
+parameter definition file. This is used by RODRIGUES to render a form inside a website which then can be used
+to schedule a parameterized container.
+
+https://github.com/ska-sa/rodrigues/
+
+
+This requires django-form-utils.
+
+https://pypi.python.org/pypi/django-form-utils
 
