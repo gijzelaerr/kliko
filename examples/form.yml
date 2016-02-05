@@ -1,0 +1,593 @@
+schema_version: 1
+name: simulator form
+description: simulator form
+container: skasa/simulator
+author: Gijs Molenaar
+email: gijsmolenaar@gmail.com
+url: http://github.com/ska-sa/rodrigues/
+
+sections:
+  -
+    name: telescope
+    description: Observatory
+    fields:
+      -
+        name: name
+        type: char
+        initial: new simulation
+        max_length: 200
+      -
+        name: observatory
+        type: choice
+        choices:
+            MeerKAT: MeerKAT
+            Kat-7: Kat-7
+            JVLA-A: JVLA-A
+        initial: MeerKAT
+      -
+        name: output
+        type: choice
+        choices:
+          Image: Image
+          Visibilities: Visibilities
+        initial: Image
+        label: Output type
+      -
+        name: sefd
+        type: float
+        label: SEFD
+        required: False
+        help_text: System defaults will be used if left blank
+  -
+     name: sky
+     description: Sky model
+     fields:
+       -
+         name: sky_type
+         type: choice
+         choices:
+           Tigger-LSM: Tigger-LSM
+           ASCII: ASCII
+           FITS: FITS
+           KATALOG: KATALOG
+       -
+         name: sky_model
+         type: file
+         required: False
+       -
+         name: katalog_id
+         type: choice
+         label: KATALOG
+         required: False
+         initial: nvss6deg
+         choices:
+           nvss6deg: nvss6deg
+           scubed1deg: scubed1deg
+           3c147_field: 3c147_field
+           3c147_field_no_core: 3c147_field_no_core
+       -
+         name: radius
+         type: float
+         label: Radius
+         initial: 0.5
+         required: False
+         help_text: Radius of degrees
+       -
+         name: fluxrange
+         type: char
+         label: Flux range
+         initial: 0.001-1
+         max_length: 32
+         help_text: Flux range in Jy
+       -
+         name: ms_dec
+         type: char
+         label: Declination
+         initial: -30d0m0s
+         help_text: in dms
+       -
+         name: ms_ra
+         type: char
+         label: Right ascension
+         initial: 0h0m0s
+         help_text: in hms
+         max_length: 32
+       -
+         name: add_noise
+         type: bool
+         initial: True
+         required: False
+       -
+         name: vis_noise_std
+         type: float
+         label: Visibility noise std
+         initial: 0
+         help_text: Generates from SEFD if 0
+  -
+     name: observation
+     description: Observation setup
+     fields:
+       -
+         name: ms_synthesis
+         type: float
+         label: Synthesis time
+         initial: 0.25
+         help_text: in hours
+       -
+         name: ms_dtime
+         type: int
+         label: Integration time
+         initial: 10
+         help_text: in seconds
+       -
+         name: ms_freq0
+         type: float
+         label: Start frequency
+         initial: 700
+         help_text: in MHz
+       -
+         name: ms_dfreq
+         type: float
+         label: Channel width
+         initial: 50e3
+         help_text: in kHz
+       -
+         name: ms_nchan
+         type: int
+         label: Channels
+         initial: 1
+         help_text: Number of frequency channels
+
+  -
+     name: imaging
+     description: imaging settings
+     fields:
+       -
+         name: use_default_im 
+         type: bool
+         label: Use default imaging settings
+         initial: True
+         required: False
+       -
+         name: imager 
+         type: choice
+         label: Imager
+         initial: LW
+         choices:
+           LWIMAGER: LWIMAGER
+           WSCLEAN: WSCLEAN
+           CASA: CASA
+       -
+         name: im_npix 
+         type: int
+         label: Image size
+         initial: 512
+         help_text: in pixels
+       -
+         name: im_cellsize 
+         type: float
+         label: Pixel size
+         help_text: in arcseconds
+         initial: 1
+       -
+         name: im_weight 
+         type: choice
+         label: uv-Weighting
+         choices:
+           Natural: Natural
+           Uniform: Uniform
+           Briggs: Briggs
+           initial: N
+       -
+         name: im_robust 
+         type: float
+         label: Robust
+         initial: 0
+         help_text: Briggs robust parameter
+       -
+         name: im_weight_fov 
+         type: float
+         label: Weight FoV
+         help_text: in arcminutes
+         required: False
+       -
+         name: im_wprojplanes 
+         type: int
+         label: w-Projection planes
+         initial: 0
+       -
+         name: im_mode 
+         type: choice
+         label: Imaging mode
+         choices:
+           channel: channel
+           mfs: mfs
+           velocity: velocity
+           frequency: frequency
+         initial: channel
+       -
+         name: channelise 
+         type: int
+         label: Image channelise
+         initial: 0
+         help_text: 0 means average all, 1 per channel, etc.
+       -
+         name: im_stokes 
+         type: char
+         label: Stokes
+         initial: I
+         max_length: 4
+
+
+
+  -
+     name: lwimager
+     description: LWIMAGER deconvolution settings
+     fields:
+       -
+         name: lwimager
+         type: bool
+         label: Deconvolve with me!
+         required: False
+       -
+         name: lwimager_niter
+         type: int
+         label: NITER
+         initial: 1000
+       -
+         name: lwimager_gain
+         type: float
+         label: Loop gain
+         initial: 0.1
+       -
+         name: lwimager_threshold
+         type: float
+         label: Clean Threshold
+         initial: 0,
+         help_text: In Jy
+
+       -
+         name: lwimager_sigmalevel
+         type: float
+         label: Clean sigma level
+         initial: 0
+         help_text: In sigma above noise
+       -
+         name: lwimager_operation
+         type: choice
+         label: Clean algorithm
+         choices:
+           csclean: csclean
+           hogbom: hogbom
+           clark: clark
+           multiscale: multiscale
+         initial: csclean
+       -
+         name: lwimager_cyclefactor
+         type: float
+         label: Cycle factor
+         initial: 1.5
+       -
+         name: lwimager_cyclespeedup
+         type: float
+         label: Cycle speed up
+         initial: -1
+       -
+         name: lwimager_stoppointmode
+         type: float
+         label: Stop point mode
+         initial: -1
+       -
+         name: lwimager_nscales
+         type: int
+         label: Scales for MS clean
+         initial: 4
+       -
+         name: lwimager_uservector
+         type: char
+         label: Clean scales
+         required: False
+         help_text: Comma seperated scales in pixels
+         max_length: 64
+
+  -
+     name: wsclean
+     description: WSCLEAN deconvolution settings
+     fields:
+       -
+         name: wsclean
+         type: bool
+         label: Deconvolve with me!
+         required: False
+       -
+         name: wsclean_niter
+         type: int
+         label: NITER
+         initial: 1000
+       -
+         name: wsclean_gain
+         type: float
+         label: Minor loop gain
+         initial: 0.1
+       -
+         name: wsclean_mgain
+         type: float
+         label: Major loop gain
+         initial: 0.9
+       -
+         name: wsclean_threshold
+         type: float
+         label: Clean Threshold
+         initial: 0,
+         help_text: In Jy
+       -
+         name: wsclean_sigmalevel
+         type: float
+         label: Clean sigma level
+         initial: 0
+         help_text: In sigma above noise
+       -
+         name: wsclean_joinpolarizations
+         type: bool
+         label: Join polarizations
+         required: False
+       -
+         name: wsclean_joinchannels
+         type: bool
+         label: Join channels
+         required: False
+       -
+         name: wsclean_multiscale
+         type: bool
+         label: Multiscale clean
+         required: False
+       -
+         name: wsclean_multiscale_dash_threshold_dash_bias
+         type: float
+         label: Multi scale threshold bias
+         initial: 0.7
+       -
+         name: wsclean_multiscale_dash_scale_dash_bias
+         type: float
+         label: Multi scale bias
+         initial: 0.6
+       -
+         name: wsclean_cleanborder
+         type: float
+         label: Clean border
+         initial: 5
+         help_text: In percentage of image width/height
+       -
+         name: wsclean_smallpsf
+         type: bool
+         label: Small PSF
+         required: False
+         help_text: Resize the psf to speed up minor clean iterations
+       -
+         name: wsclean_nonegative
+         type: bool
+         label: No negative
+         required: False
+         help_text: Do not allow negative components during cleaning
+       -
+         name: wsclean_stopnegative
+         type: bool
+         label: Stop on negative
+         required: False
+       -
+         name: wsclean_beamsize
+         type: char
+         label: Restoring beam size
+         required: False
+         help_text: In arcseconds
+         max_length: 32
+
+  -
+     name: casa
+     description: CASA deconvolution settings
+     fields:
+       -
+         name: casa
+         type: bool
+         label: Deconvolve with me!
+         required: False
+       -
+         name: casa_niter
+         type: int
+         label: NITER
+         initial: 1000
+       -
+         name: casa_threshold
+         type: float
+         label: Threshold
+         initial: 0
+       -
+         name: casa_sigmalevel
+         type: float
+         label: Clean sigma level
+         initial: 0
+         help_text: In sigma above noise
+       -
+         name: casa_gain
+         type: float
+         label: Loop Gain
+         initial: 0.1
+         help_text: Clean Loop gain
+       -
+         name: casa_psfmode
+         type: choice
+         label: PSF mode
+         initial: clark
+         choices:
+           clark: clark
+           clarkstokes: clarkstokes
+           hogbom: hogbom
+
+       -
+         name: casa_imagermode
+         type: choice
+         label: Imager mode
+         required: False
+         choices:
+           csclean: csclean
+           mosiac: mosiac
+         initial: csclean
+       -
+         name: casa_gridmode
+         type: choice
+         label: Grid mode
+         required: False
+         choices:
+           widefield: widefield
+           aprojection: aprojection
+         initial: widefield
+         help_text: A-projection only works JVLA
+       -
+         name: casa_nterms
+         type: int
+         label: NTERMS
+         initial: 1
+         help_text: See CASA clean task
+       -
+         name: casa_reffreq
+         type: float
+         label: MFS ref Frequency
+         required: False
+         help_text: in MHz
+       -
+         name: casa_multiscale
+         type: char
+         label: Multiscale
+         required: False
+         help_text: Deconvolution scales in pixels
+         max_length: 200
+       -
+         name: casa_negcomponent
+         type: float
+         label: Negative Components
+         initial: -1
+         help_text: See CASA clean task
+       -
+         name: casa_smallscalebias
+         type: float
+         label: Small scale bias
+         initial: 0.6
+         help_text: See CASA clean task
+       -
+         name: casa_restoringbeam
+         type: char
+         label: Restoring beam
+         required: False
+         max_length: 32
+       -
+         name: casa_cyclefactor 
+         type: float
+         label: Cycle factor
+         initial: 1.5
+       -
+         name: casa_cyclespeedup 
+         type: int
+         label: Cycle speed up
+         initial: -1
+
+
+  -
+     name: moresane
+     description: MORESANE deconvolution settings
+     fields:
+
+       -
+         name: moresane 
+         type: bool
+         label: Deconvolve with me!
+         required: False
+       -
+         name: moresane_scalecount 
+         type: int
+         label: Scale count
+         required: False
+         help_text: See MORESANE help
+       -
+         name: moresane_subregion 
+         type: int
+         label: Sub region
+         required: False
+         help_text: Inner region to deconvolve in pixels
+       -
+         name: moresane_startscale 
+         type: int
+         label: Start scale
+         initial: 1
+       -
+         name: moresane_stopscale 
+         type: int
+         label: Stop scale
+         initial: 20
+       -
+         name: moresane_sigmalevel 
+         type: float
+         label: Threshold level
+         initial: 3,
+         help_text: in sigma above noise
+       -
+         name: moresane_loopgain 
+         type: float
+         label: Loop gain
+         initial: 0.1
+       -
+         name: moresane_tolerance 
+         type: float
+         label: Tolerance
+         initial: .75
+       -
+         name: moresane_accuracy 
+         type: float
+         label: Accuracy
+         initial: 1e-6
+       -
+         name: moresane_majorloopmiter 
+         type: int
+         label: Major loop iterations
+         initial: 100
+       -
+         name: moresane_minorloopmiter 
+         type: int
+         label: Minor loop iterations
+         initial: 50
+       -
+         name: moresane_convmode 
+         type: choice
+         label: Convolution mode
+         initial: circular
+         choices:
+           circular: circular
+           linear: linear
+
+       -
+         name: moresane_enforcepositivity 
+         type: bool
+         label: Enforce Positivity
+         required: False
+       -
+         name: moresane_edgesupression 
+         type: bool
+         label: Edge Suppression
+         required: False
+       -
+         name: moresane_edgeoffset 
+         type: int
+         label: Edge offset
+         initial: 0
+       -
+         name: moresane_mfs 
+         type: bool
+         label: MFS map
+         required: False
+         help_text: Comes with an spi map
+
+       -
+         name: moresane_spi_dash_sigmalevel 
+         type: float
+         label: spi threshold level
+         initial: 10
+         help_text: In sigma above noise
