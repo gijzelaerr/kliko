@@ -2,3 +2,4 @@
 dist/
 kliko.egg-info/
 .tox
+build/

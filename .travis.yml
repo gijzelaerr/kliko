@@ -1,7 +1,16 @@
 language: python
 python:
-  - 2.7
-  - 3.4
-  - 3.5
+- 2.7
+- 3.4
+- 3.5
 install: pip install .
 script: nosetests
+deploy:
+  provider: pypi
+  user: gijzelaerr
+  password:
+    secure: pAw04l0i0McKe0s/F2sknXU/SzT4uejYUZnW5F4ihOT3/66lkeuE3bOzShZEsyN3R0/zhp+Xn91GdkQdr1sOU+rKeoHSLZOBvAnDimU0K5q5jLv9tn0t+2TUNadUf1mSFAMQ7R0Vr2WROLuVQjWBQqiBCrzGHMVCFThPXgX2dW6BS8EtPsyHnNtLso6kubd/tgFxrSyQLvqINMtallqFuRnyEFL8roPv7kKVeoqR1IfT4VfqArbDvvRxghPio9xUGtkjQmvP12TI+vSDi3R0MHe8/On8nD336Pt0aRt+3ZbedinlZRfUgfpaTNg5KwSx6hSiwIyrS6pyCGnzsJ1EYsc2n9m6iKVfDiBGX3UbYWZKFgQd2GppuqY1J/PzGBCvQeRK8VTHRjdO7gPNrpQvdg1ck7Md0ssl9ktBQuYvXapUM6OAb0epy6sKzwtgq4mcwKsb25kZDhw2XGOfFHILX+1Gbff0mBAoQH6O9F7aH/+N2sxvwnl8jHssfLtJ4AxHkQOOB2ixG7aOQUn1kqTvyv2uiOxBKP4LHe6u9KfiAYRPyMssjAXrwE+mDrcJXmb0nTOic6h/b/nwP65KI7mHoqo5g4vAx4xHYjz4wQwaQjG9h/e1yDBzukazJvVAFGM6nuJFGABYYIjHsmoB+XX/eauni8CJ5n7/hfu2ai/ccmI=
+  on:
+    tags: true
+    distributions: sdist bdist_wheel
+    repo: gijzelaerr/kliko
