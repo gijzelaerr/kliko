@@ -18,7 +18,17 @@ Installation
 
 or::
 
-    $ pipi install kliko
+    $ pip install kliko
+
+
+Usage
+-----
+
+
+::
+
+    import kliko.validate
+    kliko.validate.validate(your_metadata_definition)
 
 
 
