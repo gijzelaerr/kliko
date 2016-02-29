@@ -22,6 +22,7 @@ def set_fixture(docker_client, image_name, image_archive):
 class TestUtils(unittest.TestCase):
     def setUp(self):
         config = docker.utils.kwargs_from_env()
+        config['version'] = "1.20"
         self.client = docker.Client(**config)
         set_fixture(self.client, TEST_IMAGE, TEST_ARCHIVE)
 
