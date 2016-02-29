@@ -2,6 +2,7 @@
 from django.forms import CharField, FloatField, FileField, BooleanField, IntegerField, ChoiceField
 from form_utils.forms import BetterForm
 
+
 field_map = {
     'char': CharField,
     'float': FloatField,
@@ -12,7 +13,10 @@ field_map = {
 }
 
 
-def formClassFactory(parsed):
+def generate_form(parsed):
+    """
+    Generate a django form from a parsed kliko object
+    """
     all_fields = {}
     fieldsets = []
     for section in parsed['sections']:
@@ -37,10 +41,3 @@ def formClassFactory(parsed):
     all_fields['Meta'] = Meta
 
     return type('Form', (BetterForm,), all_fields)
-
-
-def generate_form(parsed):
-    """
-    Generate a django form from a parsed scientific compute string
-    """
-    return formClassFactory(parsed)
