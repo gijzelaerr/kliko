@@ -72,3 +72,10 @@ This requires django-form-utils.
 
 https://pypi.python.org/pypi/django-form-utils
 
+
+Travis build status
+-------------------
+
+.. image:: https://travis-ci.org/gijzelaerr/kliko.svg?branch=master
+    :target: https://travis-ci.org/gijzelaerr/kliko
+
