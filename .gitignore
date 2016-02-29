@@ -3,3 +3,5 @@ dist/
 kliko.egg-info/
 .tox
 build/
+.virtualenv/
+.virtualenv3/

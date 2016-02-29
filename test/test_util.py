@@ -2,6 +2,7 @@ import os
 import unittest
 import docker
 import docker.utils
+from builtins import open
 
 import kliko.utils
 from kliko.exceptions import KlikoException
@@ -12,7 +13,7 @@ TEST_ARCHIVE = os.path.join(os.path.dirname(__file__), 'test_image/%s.tar' % TES
 PARAMS_FILE = os.path.join(os.path.dirname(__file__), 'test_image/param_spec.yml')
 
 
-def set_test_fixture(docker_client, image_name, image_archive):
+def set_fixture(docker_client, image_name, image_archive):
         if docker_client.images(name=image_name):
             docker_client.remove_image(image=image_name, force=True)
         docker_client.import_image_from_file(filename=image_archive, repository=image_name, tag='latest')
@@ -22,7 +23,7 @@ class TestUtils(unittest.TestCase):
     def setUp(self):
         config = docker.utils.kwargs_from_env()
         self.client = docker.Client(**config)
-        set_test_fixture(self.client, TEST_IMAGE, TEST_ARCHIVE)
+        set_fixture(self.client, TEST_IMAGE, TEST_ARCHIVE)
 
     def test_extract(self):
         image_params = kliko.utils.extract_params(self.client, TEST_IMAGE)
