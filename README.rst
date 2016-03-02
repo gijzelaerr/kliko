@@ -28,8 +28,13 @@ Usage
 
 ::
 
-    import kliko.validate
-    kliko.validate.validate(your_metadata_definition)
+    import kliko
+
+    schema_string = open('examples/kliko.yml', 'r').read()
+    parameters = open('examples/parameters.json', 'r').read()
+    schema = kliko.validate_kliko(schema_string)
+
+    kliko.validate_parameters(parameters, schema)
 
 
 
@@ -37,18 +42,19 @@ The specification
 -----------------
 
  * All is based on standard docker containers
- * Container mush have a CMD specified, which would be the main program of the container. It should not require arguments.
+ * Container mush have a CMD specified, which would be the main program of the container. It should not require
+   arguments.
  * logging should be written to STDOUT and STDERR.
  * We define two types of compute containers, split IO and joined IO containers.
- * For split IO Input files will be mounted read only into ``/input``. Output file should be written to ``/output``, which will
-   be mounted by the host.
+ * For split IO Input files will be mounted read only into ``/input``. Output file should be written to ``/output``,
+   which will be mounted by the host.
  * For joined IO containers input & output is the /work folder which will be mounted RW.
- * parameters can be defined with a file in json format called ``parameters.json`` in ``/input``
- * Which parameters the container will aceept should be defined in a yaml file ``/param_spec.yml``
- * The parameters definition (``param_spec.yml``) file should follow the schema defined in ``kliko/schema.yml``.
+ * parameters for the computation will be given when the container is raun in the form of a file in json format called
+   ``parameters.json`` in ``/input``
+ * Which parameters the container will accept should be defined in a yaml file ``/kliko.yml``
+ * The ``kliko.yml`` file should follow the schema defined in ``kliko/schema.yml``.
  * an example parameters definition file can be found in ``examples/form.yml``
  * fields with type file will enable supply of custom input files. these will be put in the ``/input`` folder.
- * The container script should validate the supplied schema
 
 
 Example
