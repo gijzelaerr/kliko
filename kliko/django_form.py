@@ -24,7 +24,7 @@ def generate_form(parsed):
 
         for field in section['fields']:
             kwargs = {}
-            for kwarg in ('initial', 'max_length', 'label', 'help_text', 'file'):
+            for kwarg in ('initial', 'max_length', 'label', 'help_text', 'file', 'required'):
                 if kwarg in field:
                     kwargs[kwarg] = field[kwarg]
             if 'choices' in field:
