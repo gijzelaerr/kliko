@@ -11,7 +11,7 @@ setup(
 
     package_data={
         '': ['*.txt', '*.rst'],
-        'kliko': ['*.yml'],
+        'kliko': ['schemas/*.yml'],
     },
 
     author="Gijs Molenaar",
