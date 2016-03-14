@@ -24,7 +24,7 @@ Docker
 Django
 ======
 
-.. automodule:: kliko.django
+.. automodule:: kliko.django_form
     :members:
     :undoc-members:
     :show-inheritance:
