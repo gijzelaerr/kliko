@@ -1,12 +1,11 @@
-================================================
-KLIKO - Scientific Compute Container Spec Parser
-================================================
+=============================================================
+KLIKO - Scientific Compute Container Specification and Parser
+=============================================================
 
 About
 -----
 
-KLIKO is a specification, validator and parser for the Scientific Compute Container specification. KLIKO is written in
-Python. It enables a developer of scientific software to structure the input, output and paramaters of a compute task.
+KLIKO is a specification, validator and parser for the KLIKO Scientific Compute Container specification.  It enables a developer of scientific software to structure the input, output and parameters of a dockerized compute task. KLIKO is written in Python.
 
 
 Installation
