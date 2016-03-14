@@ -6,3 +6,4 @@ django
 django-form-utils
 docker-py
 coveralls
+pep8
