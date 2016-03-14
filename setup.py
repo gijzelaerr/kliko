@@ -7,7 +7,7 @@ setup(
     version=__version__,
     packages=find_packages(),
     scripts=[],
-    install_requires=['pykwalify', 'PyYAML', 'docker-py', 'future'],
+    install_requires=['pykwalify', 'PyYAML', 'docker-py', 'future', 'docopt'],
 
     package_data={
         '': ['*.txt', '*.rst'],

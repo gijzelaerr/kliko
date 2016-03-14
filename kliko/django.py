@@ -16,6 +16,11 @@ field_map = {
 def generate_form(parsed):
     """
     Generate a django form from a parsed kliko object
+
+    args:
+        params: A parsed kliko file.
+    returns:
+        form_utils.forms.BetterForm
     """
     all_fields = {}
     fieldsets = []

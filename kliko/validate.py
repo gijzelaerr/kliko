@@ -1,5 +1,6 @@
 from pykwalify.core import Core
 import yaml
+import json
 import os
 
 
@@ -8,12 +9,12 @@ here = os.path.dirname(os.path.realpath(__file__))
 SCHEMA_VERSION = 2
 
 
-def validate_kliko(str_, version=SCHEMA_VERSION):
+def validate_kliko(kliko, version=SCHEMA_VERSION):
     """
     validate a kliko yaml string
 
     args:
-        str_ (str): a yaml string
+        kliko: a parsed kliko object
 
     returns:
         dict: a (nested) kliko structure
@@ -22,12 +23,11 @@ def validate_kliko(str_, version=SCHEMA_VERSION):
         an exception if the string can't be parsed or is not in the following the Kliko schema
     """
     # first try to parse it, to make sure it is parsable
-    parsed = yaml.load(str_)
 
     schema_file = os.path.join(here, "schemas/%s.yml" % version)
-    c = Core(source_data=parsed, schema_files=[schema_file])
+    c = Core(source_data=kliko, schema_files=[schema_file])
     c.validate(raise_exception=True)
-    return yaml.load(str_)
+    return True
 
 
 def convert_to_parameters_schema(kliko):
@@ -35,8 +35,9 @@ def convert_to_parameters_schema(kliko):
     Convert a kliko schema into a validator for the parameters generated with a kliko schema.
 
     args:
-        kliko (str): a
-    return: Data for a pykwalify validator
+        kliko (str): a kliko definition
+    returns:
+        A structure for a pykwalify validator
     """
 
     type_map = {
@@ -52,14 +53,14 @@ def convert_to_parameters_schema(kliko):
             type_ = type_map.get(field['type'], field['type'])
             # TODO: we can't define multiple types:
             # https://github.com/Grokzen/pykwalify/issues/39
-            mapping[field['name']] = {'type':'any'}
+            mapping[field['name']] = {'type': 'any'}
 
     return {'type': 'map', 'mapping': mapping}
 
 
 def validate_parameters(parameters, kliko):
     """
-    validate a paramters string
+    validate a set of parameters given a kliko definition
 
     args:
         parameters (dict): A structure that should follow the given kliko structure
@@ -71,8 +72,38 @@ def validate_parameters(parameters, kliko):
     raises:
         an exception if the string can't be parsed or is not in the defining valid parameters
     """
-    # first try to parse it, to make sure it is parsable
     schema = convert_to_parameters_schema(kliko)
     c = Core(source_data=parameters, schema_data=schema)
     c.validate(raise_exception=True)
     return True
+
+
+def validate(kliko_file='/kliko.yml', paramaters_file='/parameters.json'):
+    """
+    Validate the kliko and paramaters file and parse the parameters file. Should be run inside
+    the Kliko container.
+
+    Args:
+        kliko_file (str):  Path to a kliko file
+        paramaters_file (str): path to a parameters file
+
+    Returns:
+        The validated and parsed paramaters file
+    """
+
+    with open(kliko_file, 'r') as f:
+        kliko = yaml.safe_load(f)
+
+    validate_kliko(kliko)
+
+    with open(paramaters_file, 'r') as f:
+        parameters = json.load(f)
+
+    validate_parameters(parameters, kliko)
+
+    return parameters
+
+
+
+
+

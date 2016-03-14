@@ -10,7 +10,7 @@ def extract_params(docker_client, image_name):
     """
     args:
         docker_client (docker.docker.Client): a docker client object
-        image_name (str): name of the image to use for param_spec.yml extraction
+        image_name (str): name of the image to use for kliko.yml extraction
     returns:
         str: content of the param schema
     """
