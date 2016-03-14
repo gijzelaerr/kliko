@@ -5,3 +5,4 @@ kliko.egg-info/
 build/
 .virtualenv/
 .virtualenv3/
+doc/_build/
