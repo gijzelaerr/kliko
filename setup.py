@@ -6,7 +6,7 @@ setup(
     name="kliko",
     version=__version__,
     packages=find_packages(),
-    scripts=[],
+    scripts=['bin/kliko-validate.py'],
     install_requires=['pykwalify', 'PyYAML', 'docker-py', 'future', 'docopt'],
 
     package_data={
