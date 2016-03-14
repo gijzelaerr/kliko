@@ -56,3 +56,5 @@ Travis build status
 .. image:: https://coveralls.io/repos/github/gijzelaerr/kliko/badge.svg?branch=master
     :target: https://coveralls.io/github/gijzelaerr/kliko?branch=master
 
+.. image:: https://img.shields.io/pypi/v/kliko.svg
+     :target: https://pypi.python.org/pypi/kliko
