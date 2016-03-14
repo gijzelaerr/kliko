@@ -6,8 +6,7 @@ About
 -----
 
 KLIKO is a specification, validator and parser for the Scientific Compute Container specification. KLIKO is written in
-Python. It enables a developer of scientific software to structure the input, output and paramaters of a compute
- task.
+Python. It enables a developer of scientific software to structure the input, output and paramaters of a compute task.
 
 
 Installation
@@ -54,4 +53,7 @@ Travis build status
 
 .. image:: https://travis-ci.org/gijzelaerr/kliko.svg?branch=master
     :target: https://travis-ci.org/gijzelaerr/kliko
+
+.. image:: https://coveralls.io/repos/github/gijzelaerr/kliko/badge.svg?branch=master
+    :target: https://coveralls.io/github/gijzelaerr/kliko?branch=master
 
