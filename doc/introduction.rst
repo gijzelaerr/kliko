@@ -10,7 +10,8 @@ This documentation is intended for the developer who wants to package up a piece
 installation
 ============
 
-You can install Kliko inside a docker container or just on your system::
+Development of Kliko is done on `github <https://github.com/gijzelaerr/kliko>`_. You can install Kliko inside a docker
+container or just on your system::
 
     $ python setup.py install
 
