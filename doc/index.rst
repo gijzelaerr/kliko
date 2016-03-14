@@ -12,7 +12,8 @@ Contents:
    :maxdepth: 2
 
    introduction
-   installation
+   terminology
+   specification
    usage
 
 

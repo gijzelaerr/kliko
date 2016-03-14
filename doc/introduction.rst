@@ -1,25 +1,38 @@
-============
+
 Introduction
 ============
 
 KLIKO is a specification, validator and parser for the Scientific Compute Container specification. KLIKO is written in
 Python.
 
+installation
+============
 
-The specification
------------------
+From the source folder::
 
- * All is based on standard docker containers
- * Container mush have a CMD specified, which would be the main program of the container. It should not require
-   arguments.
- * logging should be written to STDOUT and STDERR.
- * We define two types of compute containers, split IO and joined IO containers.
- * For split IO Input files will be mounted read only into ``/input``. Output file should be written to ``/output``,
-   which will be mounted by the host.
- * For joined IO containers input & output is the /work folder which will be mounted RW.
- * parameters for the computation will be given when the container is raun in the form of a file in json format called
-   ``parameters.json`` in ``/input``
- * Which parameters the container will accept should be defined in a yaml file ``/kliko.yml``
- * The ``kliko.yml`` file should follow the schema defined in ``kliko/schema.yml``.
- * an example parameters definition file can be found in ``examples/form.yml``
- * fields with type file will enable supply of custom input files. these will be put in the ``/input`` folder.
+    $ python setup.py install
+
+
+or from pypi::
+
+    $ pip install python-docker-machine
+
+
+Getting started
+===============
+
+To get started you should:
+
+ * Create a Docker container from your application
+ * Add or modify a script in the container that can parse and use a ``parameters.json`` file.
+ * Add a ``kliko.yml`` file to the root of the container which defines the valid fields in the parameters file.
+ * You can validate your kliko file with the ``kliko-validate.py`` script installed by the kliko Python library.
+
+
+Contributing
+============
+
+Contributions are more than welcome! If you experience any problems let us know in the bug tracker. We accept patches
+in the form of github pull requests. Please make sure your code works with python 2 and python3, and is pep8 compatible.
+Also make sure the test suit actually passes all tests. We use docker in some of the tests so you need to have that
+installed and configured.
