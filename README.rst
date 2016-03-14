@@ -8,16 +8,17 @@ About
 KLIKO is a specification, validator and parser for the Scientific Compute Container specification. KLIKO is written in
 Python. It enables a developer of scientific software to structure the input, output and paramaters of a compute task.
 
+This documentation is intended for the developer who wants to package up a piece of software into a Kliko container.
 
 Installation
 ------------
 
-::
+You can install Kliko inside a docker container or just on your system::
 
     $ python setup.py install
 
 
-or::
+or from pypi::
 
     $ pip install kliko
 
