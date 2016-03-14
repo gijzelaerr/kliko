@@ -106,8 +106,3 @@ def validate(kliko_file='/kliko.yml', paramaters_file='/parameters.json'):
     validate_parameters(parameters, kliko)
 
     return parameters
-
-
-
-
-

@@ -10,7 +10,9 @@ before_install:
 - docker pull alpine:3.3
 - pip install -r test/requirements.txt
 install: pip install ".[django,docker]"
-script: nosetests --with-coverage  --cover-package=kliko
+script:
+- nosetests --with-coverage  --cover-package=kliko
+- pep8 --ignore=E501 kliko
 after_success: coveralls
 deploy:
   provider: pypi
