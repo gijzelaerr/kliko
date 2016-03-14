@@ -6,3 +6,4 @@ build/
 .virtualenv/
 .virtualenv3/
 doc/_build/
+.coverage
