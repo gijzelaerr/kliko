@@ -3,6 +3,7 @@ import unittest
 import json
 import yaml
 
+from pykwalify.errors import SchemaError
 import kliko.validate
 
 here = os.path.dirname(os.path.realpath(__file__))
@@ -31,6 +32,23 @@ class TestExample(unittest.TestCase):
     def test_validate(self):
         kliko.validate.validate(kliko_file, parameters_file)
 
+    def test_missing_field(self):
+        kliko_data = {'sections': [{'name': 'section',
+                                    'fields': [{'name': 'required',
+                                                'type': 'float',
+                                                'required': True}]
+                                    }]
+                      }
+        parameters_data = {}
+        with self.assertRaises(SchemaError):
+            kliko.validate.validate_parameters(parameters_data, kliko_data)
 
-
-
+    def test_illegal_field(self):
+        kliko_data = {'sections': [{'name': 'section',
+                                    'fields': [{'name': 'field',
+                                                'type': 'float'}]
+                                    }]
+                      }
+        parameters_data = {'illegal_field': 'bla'}
+        with self.assertRaises(SchemaError):
+            kliko.validate.validate_parameters(parameters_data, kliko_data)

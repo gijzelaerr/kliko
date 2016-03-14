@@ -53,10 +53,11 @@ def convert_to_parameters_schema(kliko):
 
     for section in kliko['sections']:
         for field in section['fields']:
-            type_ = type_map.get(field['type'], field['type'])
             # TODO: we can't define multiple types:
             # https://github.com/Grokzen/pykwalify/issues/39
-            mapping[field['name']] = {'type': 'any'}
+            # type_ = type_map.get(field['type'], field['type'])
+            value = {'type': 'any', 'required': 'required' in field}
+            mapping[field['name']] = value
 
     return {'type': 'map', 'mapping': mapping}
 
