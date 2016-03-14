@@ -1,4 +1,6 @@
-
+"""
+Helper functions for using Kliko in combinaton with Docker
+"""
 import logging
 from .exceptions import KlikoException
 

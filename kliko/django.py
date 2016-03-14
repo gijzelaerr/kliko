@@ -1,4 +1,6 @@
-
+"""
+Helper functions for using Kliko in combinaton with Django
+"""
 from django.forms import CharField, FloatField, FileField, BooleanField, IntegerField, ChoiceField
 from form_utils.forms import BetterForm
 
