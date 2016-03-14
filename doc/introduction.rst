@@ -1,4 +1,4 @@
-
+============
 Introduction
 ============
 
@@ -15,7 +15,7 @@ From the source folder::
 
 or from pypi::
 
-    $ pip install python-docker-machine
+    $ pip install kliko
 
 
 Getting started

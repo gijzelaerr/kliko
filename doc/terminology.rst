@@ -1,3 +1,4 @@
+===========
 Terminology
 ===========
 
@@ -36,8 +37,8 @@ The parameters.json file
 ------------------------
 
 A json encoded structure that contains all the parameter values for your compute task. This file is presented to your
- container at runtime by the container runner, for example RODRIGUES or Nextflow. The valid fields are defined
- by the Kliko image container and are defined in the ``kliko.yml`` file.
+container at runtime by the container runner, for example RODRIGUES or Nextflow. The valid fields are defined
+by the Kliko image container and are defined in the ``kliko.yml`` file.
 
 
 
