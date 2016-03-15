@@ -12,6 +12,15 @@ Validation
     :show-inheritance:
 
 
+Command line interface generation
+=================================
+
+.. automodule:: kliko.cli
+    :members:
+    :undoc-members:
+    :show-inheritance:
+
+
 Docker
 ======
 
