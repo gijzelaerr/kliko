@@ -1,2 +1,6 @@
+import pkg_resources
 
-from kliko.version import __version__
+try:
+    __version__ = pkg_resources.require("radiopadre")[0].version
+except pkg_resources.DistributionNotFound:
+    __version__ = "dev"

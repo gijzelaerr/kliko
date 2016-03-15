@@ -1,6 +1,7 @@
 from setuptools import setup, find_packages
 
-from kliko.version import __version__
+__version__ = "0.5"
+
 
 install_requires = [
     'pykwalify',
@@ -40,6 +41,7 @@ setup(
         "Programming Language :: Python :: 2.7",
         "Programming Language :: Python :: 3.4",
         "Programming Language :: Python :: 3.5",
+        "Programming Language :: Python :: Implementation :: PyPy",
         "Topic :: Scientific/Engineering",
         "Topic :: Software Development :: Build Tools",
         "Topic :: System :: Distributed Computing",
