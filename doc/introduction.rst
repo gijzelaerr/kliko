@@ -56,3 +56,9 @@ Contributions are more than welcome! If you experience any problems let us know 
 in the form of github pull requests. Please make sure your code works with python 2 and python3, and is pep8 compatible.
 Also make sure the test suit actually passes all tests. We use docker in some of the tests so you need to have that
 installed and configured.
+
+Testing
+=======
+
+Note that before you run the test suite you have to create a ``klikotest`` docker image by running make in
+``test/teset_image``.

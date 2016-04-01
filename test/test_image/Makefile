@@ -1,10 +1,10 @@
-DOCKER_REPO=klikotest
+DOCKER_REPO=radioastro/klikotest
 
 
 .PHONY: build clean
 
 
-all: build save
+all: build
 
 
 build:
