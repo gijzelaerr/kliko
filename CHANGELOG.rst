@@ -1,3 +1,10 @@
+0.6
+===
+
+* Added a command line kliko image runner (``kliko-run``)
+* Kliko entrypoint is now /kliko. This makes it easier to integrate kliko with existing containers
+* parameters file is now consistently in ``/parameters.json``.
+
 0.3
 ===
 

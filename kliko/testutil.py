@@ -11,3 +11,5 @@ with open(kliko_file, 'r') as f:
 
 with open(parameters_file, 'r') as f:
     parameters_data = json.load(f)
+
+parameters_str = json.dumps(parameters_data)

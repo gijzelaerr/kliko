@@ -30,7 +30,7 @@ def validate_kliko(kliko, version=SCHEMA_VERSION):
     schema_file = os.path.join(here, "schemas/%s.yml" % version)
     c = Core(source_data=kliko, schema_files=[schema_file])
     c.validate(raise_exception=True)
-    return True
+    return kliko
 
 
 def convert_to_parameters_schema(kliko):

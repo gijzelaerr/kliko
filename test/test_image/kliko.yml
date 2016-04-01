@@ -13,9 +13,9 @@ sections:
     description: The first section
     fields:
       -
-        name: choise
+        name: choice
         label: choice field
-        type: choise
+        type: choice
         initial: second
         required: True
         choices:

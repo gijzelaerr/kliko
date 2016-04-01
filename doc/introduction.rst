@@ -60,5 +60,5 @@ installed and configured.
 Testing
 =======
 
-Note that before you run the test suite you have to create a ``klikotest`` docker image by running make in
+Note that before you run the test suite you have to create a ``klikotest`` docker image by running ``make`` in
 ``test/teset_image``.

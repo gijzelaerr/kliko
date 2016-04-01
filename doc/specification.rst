@@ -3,23 +3,20 @@ The specification
 =================
 
  * Kliko is based on standard docker containers
- * Container mush have a CMD specified, which would be the main program of the container. It should not require
-   arguments.
+ * A Kliko container should have a ``/kliko.yml`` fiel which defines the accepted parameters.
+ * A Kliko container should have a runable binary or script named ``/kliko``. This will be the entrypoint for the
+   Kliko runner.
  * logging should be written to STDOUT and STDERR.
- * We define two types of compute containers, split IO and joined IO containers.
- * For split IO Input files will be mounted read only into ``/input``. Output file should be written to ``/output``,
-   which will be mounted by the host.
- * For joined IO containers input & output is the /work folder which will be mounted RW.
+ * We define two types of compute containers, split IO and joined IO containers. For split IO Input files will be
+   mounted read only into ``/input``. Output file should be written to ``/output``, which will be mounted by the host.
+   For joined IO containers input & output is the /work folder which will be mounted RW.
  * parameters for the computation will be given when the container is run in the form of a file in json format called
-   ``parameters.json`` in ``/input``
- * Which parameters the container will accept should be defined in a yaml file ``/kliko.yml``
- * The ``kliko.yml`` file should follow the schema defined in ``kliko/schema.yml``.
- * an example parameters definition file can be found in ``examples/form.yml``
+   ``/parameters.json``
  * fields with type file will enable supply of custom input files. these will be put in the ``/input`` folder.
 
 
-The kliko.yml file
-==================
+The /kliko.yml file
+===================
 
 The kliko file should be in YAML format and has these required fields:
 
@@ -69,7 +66,7 @@ input & output is the /work folder which will be mounted RW.
 Sections
 --------
 
-The paramaters are grouped in sections. Sections are just lists of fields.
+The parameters are grouped in sections. Sections are just lists of fields.
 
 
 fields
