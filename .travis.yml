@@ -3,16 +3,19 @@ sudo: required
 services:
   - docker
 python:
-- 2.7
-- 3.4
-- 3.5
+ - 2.7
+ - 3.4
+ - 3.5
 before_install:
-- docker pull alpine:3.3
-- pip install -r test/requirements.txt
+ - docker pull alpine:3.3
+ - cd test/test_image
+ - make build
+ - cd ../..
+ - pip install -r test/requirements.txt
 install: pip install ".[django,docker]"
 script:
-- nosetests --with-coverage  --cover-package=kliko
-- pep8 --ignore=E501 kliko
+ - nosetests --with-coverage  --cover-package=kliko
+ - pep8 --ignore=E501 kliko
 after_success: coveralls
 deploy:
   provider: pypi
