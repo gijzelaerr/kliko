@@ -18,7 +18,7 @@ class TestUtils(unittest.TestCase):
         config = docker.utils.kwargs_from_env()
         config['version'] = "1.20"
         self.client = docker.Client(**config)
-        assert self.client.images(name=TEST_IMAGE)
+        self.assertTrue(self.client.images(name=TEST_IMAGE), "docker image %s not found" % TEST_IMAGE)
 
     def test_extract(self):
         image_params = kliko.kliko_docker.extract_params(self.client, TEST_IMAGE)

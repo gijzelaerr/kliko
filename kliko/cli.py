@@ -114,12 +114,13 @@ def prepare_io(parameters, target=None):
         if not os.path.exists(input_):
             os.mkdir(input_)
     else:
-        parameters_file = tempfile.NamedTemporaryFile(mode='w')
-        handle, input_ = tempfile.mkstemp()
+        _, parameters_path = tempfile.mkstemp()
+        parameters_file = open(parameters_path, 'w')
+        input_ = tempfile.mkdtemp()
 
     parameters_file.write(parameters)
-    parameters_file.flush()
-    return parameters_file.name, target, input_
+    parameters_file.close()
+    return parameters_path, target, input_
 
 
 def first_parser(argv):
