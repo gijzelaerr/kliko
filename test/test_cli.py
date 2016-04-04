@@ -1,7 +1,9 @@
 import unittest
+import os
 import kliko.cli
 from kliko.testutil import kliko_data, parameters_str
 
+this_file = os.path.realpath(__file__)
 
 class TestCli(unittest.TestCase):
     def test_cli(self):
@@ -30,7 +32,7 @@ class TestCli(unittest.TestCase):
             kliko.cli.second_parser(['kliko-run', 'radioastro/klikotest', '--help'], kliko_data)
 
         kliko.cli.second_parser(['kliko-run', 'radioastro/klikotest', '--choice', 'second', '--char', 'gijs',
-                                 '--file', 'test_cli.py', '--int', '10'], kliko_data)
+                                 '--file', this_file, '--int', '10'], kliko_data)
 
     def test_kliko_runner(self):
         with self.assertRaises(SystemExit):
@@ -43,4 +45,4 @@ class TestCli(unittest.TestCase):
             kliko.cli.kliko_runner(['kliko-run', 'radioastro/klikotest', '--help'])
 
         kliko.cli.kliko_runner(['kliko-run', 'radioastro/klikotest', '--choice', 'second', '--char', 'gijs',
-                                 '--file', 'test_cli.py', '--int', '10'])
+                                 '--file', this_file, '--int', '10'])

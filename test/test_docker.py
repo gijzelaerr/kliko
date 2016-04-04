@@ -4,7 +4,7 @@ import docker
 import docker.utils
 from builtins import open
 
-import kliko.docker
+import kliko.kliko_docker
 from kliko.exceptions import KlikoException
 
 TEST_IMAGE = 'radioastro/klikotest'
@@ -21,10 +21,10 @@ class TestUtils(unittest.TestCase):
         assert self.client.images(name=TEST_IMAGE)
 
     def test_extract(self):
-        image_params = kliko.docker.extract_params(self.client, TEST_IMAGE)
+        image_params = kliko.kliko_docker.extract_params(self.client, TEST_IMAGE)
         true_params = open(PARAMS_FILE, mode='r', encoding='utf-8').read()
         self.assertEqual(image_params, true_params)
 
     def test_extract_without_params(self):
         with self.assertRaises(KlikoException):
-            kliko.docker.extract_params(self.client, 'alpine:3.3')
+            kliko.kliko_docker.extract_params(self.client, 'alpine:3.3')

@@ -19,11 +19,11 @@ class TestExample(unittest.TestCase):
         kliko.validate.validate(kliko_file, parameters_file)
 
     def test_validate_kliko_file_missing(self):
-        with self.assertRaises(FileNotFoundError):
+        with self.assertRaises(IOError):
             kliko.validate.validate('/non_existing_kliko_file', parameters_file)
 
     def test_validate_parameters_file_missing(self):
-        with self.assertRaises(FileNotFoundError):
+        with self.assertRaises(IOError):
             kliko.validate.validate(kliko_file, '/non_existing_parameters_file')
 
     def test_missing_field(self):
