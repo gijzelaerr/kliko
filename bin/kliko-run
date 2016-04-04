@@ -1,0 +1,6 @@
+#!/usr/bin/env python
+from kliko.cli import kliko_runner
+import sys
+
+if __name__ == '__main__':
+    kliko_runner(sys.argv)

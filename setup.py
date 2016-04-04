@@ -1,6 +1,6 @@
 from setuptools import setup, find_packages
 
-__version__ = "0.5"
+__version__ = "0.6"
 
 
 install_requires = [
@@ -15,12 +15,16 @@ extras_require = {
     'docker': ['docker-py'],
 }
 
+scripts = [
+    'bin/kliko-validate',
+    'bin/kliko-run',
+]
 
 setup(
     name="kliko",
     version=__version__,
     packages=find_packages(),
-    scripts=['bin/kliko-validate.py'],
+    scripts=scripts,
     install_requires=install_requires,
     extras_require=extras_require,
     package_data={

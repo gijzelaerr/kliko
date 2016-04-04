@@ -24,6 +24,7 @@ def extract_params(docker_client, image_name):
         for warning in warnings:
             logger.warning(warning)
     stdout = docker_client.logs(container, stdout=True, stream=False).decode('utf-8')
+    docker_client.remove_container(container)  # always clean up the container
     if error_code != 0:
         raise KlikoException(stdout.strip())
     return stdout

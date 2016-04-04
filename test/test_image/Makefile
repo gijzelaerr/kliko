@@ -18,5 +18,5 @@ save: build
 	docker export -o ${DOCKER_REPO}.tar ${CONTAINER}
 
 run: build
-	docker run -ti ${DOCKER_REPO} /bin/ash
+	docker run -ti ${DOCKER_REPO}
 
