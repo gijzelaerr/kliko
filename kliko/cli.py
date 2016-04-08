@@ -109,7 +109,8 @@ def prepare_io(parameters, target=None):
 
     if sys.platform == "darwin":
         # tempfolder not mounted into docker virtual machine
-        parameters_file = open(os.path.join(here, 'parameters.json'), 'w')
+        parameters_path = os.path.join(here, 'parameters.json')
+        parameters_file = open(parameters_path, 'w')
         input_ = os.path.join(here, 'input')
         if not os.path.exists(input_):
             os.mkdir(input_)
