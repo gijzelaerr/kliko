@@ -4,6 +4,7 @@ kliko.egg-info/
 .tox
 build/
 .virtualenv/
+.virtualenv2/
 .virtualenv3/
 doc/_build/
 .coverage
