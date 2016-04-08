@@ -3,7 +3,6 @@
 import os
 from kliko.validate import validate
 
-
 parameters = validate()
 
 print("the parameters: " + str(parameters))

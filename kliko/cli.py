@@ -13,7 +13,7 @@ import docker.utils
 import requests.exceptions
 import yaml
 
-from kliko.kliko_docker import extract_params
+from kliko.docker import extract_params
 from kliko.validate import validate_kliko
 
 

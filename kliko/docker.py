@@ -1,6 +1,7 @@
 """
 Helper functions for using Kliko in combinaton with Docker
 """
+from __future__ import absolute_import
 import logging
 from .exceptions import KlikoException
 
