@@ -1,6 +1,7 @@
 """
 Command line utilities for Kliko
 """
+from __future__ import absolute_import
 import argparse
 import json
 import os

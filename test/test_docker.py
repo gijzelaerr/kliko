@@ -10,7 +10,7 @@ from kliko.exceptions import KlikoException
 TEST_IMAGE = 'radioastro/klikotest'
 
 
-PARAMS_FILE = os.path.join(os.path.dirname(__file__), 'test_image/kliko.yml')
+PARAMS_FILE = os.path.join(os.path.dirname(__file__), '../examples/kliko.yml')
 
 
 class TestUtils(unittest.TestCase):
@@ -27,4 +27,4 @@ class TestUtils(unittest.TestCase):
 
     def test_extract_without_params(self):
         with self.assertRaises(KlikoException):
-            kliko.docker.extract_params(self.client, 'alpine:3.3')
+            kliko.docker.extract_params(self.client, 'python:3.5')

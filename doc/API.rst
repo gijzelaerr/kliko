@@ -1,6 +1,9 @@
-=====
-Usage
-=====
+===
+API
+===
+
+Kliko contains various helper functions to validate Kliko files, parameter files based on a kliko definition,
+generate command line interfaces and django forms from Kliko definitions.
 
 
 Validation

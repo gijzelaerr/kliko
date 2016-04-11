@@ -37,16 +37,31 @@ use case is to simplify the parameterized scheduling of compute tasks using
 `RODRIGUES <https://github.com/ska-sa/rodrigues/>`_.
 
 
-
 Getting started
 ===============
 
-To get started you should:
+Creating a Kliko container
+--------------------------
 
  * Create a Docker container from your application
- * Add or modify a script in the container that can parse and use a ``parameters.json`` file.
+ * Create a script ``/kliko`` in the container that can parse and use a ``/parameters.json`` file.
  * Add a ``kliko.yml`` file to the root of the container which defines the valid fields in the parameters file.
- * You can validate your kliko file with the ``kliko-validate.py`` script installed by the kliko Python library.
+ * You can validate your kliko file with the ``kliko-validate`` script installed by the kliko Python library.
+
+
+Running a kliko container
+-------------------------
+
+You can run a kliko container in various ways. The most simple way is to use the ``kliko-run`` script which is
+installed on your system when you install Kliko. Use ``kliko-run <image-name> --help`` to see a list of accepted
+parameters.
+
+If you already have a parameters file you can also run the container manually::
+
+    $ docker run -v parameters.json:/parameters.join:ro -v input:/input:ro -v output:/output:rw <image-name> kliko
+
+Finally you can also run kliko images and visualise results using `RODRIGUES`_,
+a web based kliko runner.
 
 
 Contributing
@@ -61,4 +76,4 @@ Testing
 =======
 
 Note that before you run the test suite you have to create a ``klikotest`` docker image by running ``make`` in
-``test/teset_image``.
+the ``examples`` folder.
