@@ -3,20 +3,22 @@ sudo: required
 services:
   - docker
 python:
+ - pypy
  - 2.7
  - 3.4
  - 3.5
 before_install:
- - docker pull alpine:3.3
- - cd test/test_image
+ - cd examples
  - make build
- - cd ../..
+ - cd ..
  - pip install docker-py==1.5.0   # API version 1.20 on server
  - pip install -r test/requirements.txt
 install: pip install ".[django,docker]"
 script:
  - nosetests --with-coverage  --cover-package=kliko
  - pep8 --ignore=E501 kliko
+ - cd doc
+ - sphinx-build -b html -d _build/doctrees -W  . _build/html
 after_success: coveralls
 deploy:
   provider: pypi

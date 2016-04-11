@@ -14,7 +14,8 @@ Contents:
    introduction
    terminology
    specification
-   usage
+   cli
+   API
 
 
 Indices and tables

@@ -26,6 +26,12 @@ A container is an active (or inactive if exited) stateful instantiation of an im
 Read more about Docker terminology in the `Docker glossary <http://docs.docker.com/reference/glossary/#container>`_.
 
 
+Kliko runner
+------------
+
+Something that can run a kliko image. For example the ``kliko-run`` command line tool, or RODRIGUES.
+
+
 The kliko.yml file
 ------------------
 

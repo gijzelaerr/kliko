@@ -6,13 +6,13 @@ The specification
  * A Kliko container should have a ``/kliko.yml`` fiel which defines the accepted parameters.
  * A Kliko container should have a runable binary or script named ``/kliko``. This will be the entrypoint for the
    Kliko runner.
- * logging should be written to STDOUT and STDERR.
+ * Logging should be written to STDOUT and STDERR.
  * We define two types of compute containers, split IO and joined IO containers. For split IO Input files will be
    mounted read only into ``/input``. Output file should be written to ``/output``, which will be mounted by the host.
    For joined IO containers input & output is the /work folder which will be mounted RW.
- * parameters for the computation will be given when the container is run in the form of a file in json format called
+ * Parameters for the computation will be given when the container is run in the form of a file in json format called
    ``/parameters.json``
- * fields with type file will enable supply of custom input files. these will be put in the ``/input`` folder.
+ * Fields with type file will enable supply of custom input files. these will be put in the ``/input`` folder.
 
 
 The /kliko.yml file
@@ -87,8 +87,7 @@ Optional keys are:
  * **initial**: supply a initial (default) value for a field
  * **max_length**: define a maximum length in case of string type
  * **choices**: define a list of choices in case of a choice field. The choices should be a mapping
- * **label**: The label used for representing the field to the end user. If no label is given the name of the field
-              is used.
+ * **label**: The label used for representing the field to the end user. If no label is given the name of the field is used.
  * **required**: Indicates if the field is required or optional
  * **help_text**: An optional help text that is presented to the end user next to the field.
 
