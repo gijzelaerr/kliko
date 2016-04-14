@@ -19,6 +19,7 @@ script:
  - pep8 --ignore=E501 kliko
  - cd doc
  - sphinx-build -b html -d _build/doctrees -W  . _build/html
+ - cd ..
 after_success: coveralls
 deploy:
   provider: pypi
