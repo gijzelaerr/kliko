@@ -26,14 +26,36 @@ or from pypi::
 Usage
 -----
 
-::
+from a Python script inside a container::
 
-    import kliko.validate
-    kliko.validate.validate('/kliko.yml', '/parameters.json')
+    from kliko.validate import validate
+    parameters = validate()
 
-or::
+or to check if a kliko file has a valid syntax::
 
-    $ kliko-validate.py /kliko.yml
+    $ kliko-validate /kliko.yml
+
+or try to run the docker image from the examples folder directly::
+
+    $ kliko-run radioastro/klikotest --help
+
+        usage: kliko-run [-h] [--target_folder TARGET_FOLDER] --choice {second,first}
+                         --char CHAR [--float FLOAT] --file FILE --int INT
+                         image_name
+
+        positional arguments:
+          image_name
+
+        optional arguments:
+          -h, --help            show this help message and exit
+          --target_folder TARGET_FOLDER
+          --choice {second,first}
+                                choice field (default: second)
+          --char CHAR           char field, maximum of 10 chars (default: empty)
+          --float FLOAT         float field (default: 0.0)
+          --file FILE           file field, this file will be put in /input in case of
+                                split io, /work in case of join io
+          --int INT             int field
 
 
 Documentation
