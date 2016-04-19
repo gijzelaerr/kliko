@@ -1,26 +1,41 @@
 language: python
+
 sudo: required
+
 services:
   - docker
+
 python:
  - pypy
  - 2.7
  - 3.4
  - 3.5
+ - nightly
+
+matrix:
+  allow_failures:
+      - python: "nightly"
+
 before_install:
  - cd examples
  - make build
  - cd ..
- - pip install docker-py==1.5.0   # API version 1.20 on server
+ - pip install docker-py==1.5.0   # travis docker has API version 1.20 
  - pip install -r test/requirements.txt
-install: pip install ".[django,docker]"
+
+install:
+ - pip install ".[django,docker]"
+
 script:
  - nosetests --with-coverage  --cover-package=kliko
  - pep8 --ignore=E501 kliko
  - cd doc
  - sphinx-build -b html -d _build/doctrees -W  . _build/html
  - cd ..
-after_success: coveralls
+
+after_success:
+ - coveralls
+
 deploy:
   provider: pypi
   user: gijzelaerr
