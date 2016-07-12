@@ -58,7 +58,7 @@ parameters.
 
 If you already have a parameters file you can also run the container manually::
 
-    $ docker run -v parameters.json:/parameters.join:ro -v input:/input:ro -v output:/output:rw <image-name> kliko
+    $ docker run -v $(pwd)/parameters.json:/parameters.join:ro -v $(pwd)/input:/input:ro -v $(pwd)/output:/output:rw <image-name> /kliko
 
 Finally you can also run kliko images and visualise results using `RODRIGUES`_,
 a web based kliko runner.
