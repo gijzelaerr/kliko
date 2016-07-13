@@ -3,8 +3,8 @@ import yaml
 import json
 
 here = path.dirname(path.realpath(__file__))
-kliko_file = path.join(here, "../examples/kliko.yml")
-parameters_file = path.join(here, "../examples/parameters.json")
+kliko_file = path.join(here, "../examples/minimal/kliko.yml")
+parameters_file = path.join(here, "../examples/minimal/parameters.json")
 
 with open(kliko_file, 'r') as f:
     kliko_data = yaml.load(f)

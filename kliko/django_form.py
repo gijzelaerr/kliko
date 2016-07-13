@@ -12,6 +12,7 @@ field_map = {
     'bool': BooleanField,
     'int': IntegerField,
     'choice': ChoiceField,
+    'str': CharField,
 }
 
 

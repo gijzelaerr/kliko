@@ -1,3 +1,16 @@
+0.7
+===
+
+* Install docker by default
+* Made container, author and email fields optional in specification
+* Increased specification number (3)
+* Don't put parameter files in /input but in /param_files
+* Renamed ``char`` field type to ``str``
+* Add option to override paths using environment variables (INPUT, OUTPUT, WORK,
+  PARAM_FILES, KLIKO_FILE, PARAM_FILE)
+* Change behavior of kliko-run, it now accepts the --input, --output, --work
+
+
 0.6
 ===
 

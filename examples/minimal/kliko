@@ -1,0 +1,19 @@
+#!/usr/bin/env python
+
+import os
+from kliko.validate import validate
+
+parameters = validate()
+
+print("the parameters: " + str(parameters))
+
+print("content of /input: " + str(os.listdir('/input')))
+
+print("content of /output: " + str(os.listdir('/output')))
+
+print("content of /param_files: " + str(os.listdir('/param_files')))
+
+with open('/output/gijs_was_here', 'w') as f:
+    f.write('hello!')
+
+

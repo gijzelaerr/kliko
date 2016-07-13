@@ -50,6 +50,12 @@ def generate_kliko_cli_parser(kliko_data, parent_parser=None):
     else:
         parser = argparse.ArgumentParser(description=kliko_data['description'])
 
+    if kliko_data['io'] == 'split':
+        parser.add_argument('--output', type=str)
+        parser.add_argument('--input', type=str)
+    elif kliko_data['io'] == 'joined':
+        parser.add_argument('--work', type=str)
+
     for section in kliko_data['sections']:
         for field in section['fields']:
 
@@ -81,9 +87,10 @@ def generate_kliko_cli_parser(kliko_data, parent_parser=None):
             if 'initial' in field:
                 kwargs['default'] = field['initial']
                 help += " (default: %s)" % field['initial']
-
-            if 'required' in field:
-                kwargs['required'] = field['required']
+            else:
+                # we don't want to require a field with an initial value
+                if 'required' in field:
+                    kwargs['required'] = field['required']
 
             if help:
                 kwargs['help'] = help
@@ -92,37 +99,57 @@ def generate_kliko_cli_parser(kliko_data, parent_parser=None):
     return parser
 
 
-def prepare_io(parameters, target=None):
+def prepare_io(parameters, io='split', input_path=False, output_path=False, work_path=False, param_files_path=False):
     """
     args:
         parameters: A dict containing the parameters
-        target: output or work dir for kliko
+        io (str): split or join
+        input_path:  input path, defaults to $(pwd)/input
+        output_path: output path, defaults to $(pwd)/output
+        work_path: work path, defaults to $(pwd)/work
+        param_files_path: param_files_path path, defaults to $(pwd)/input
     returns:
-        tuple: (path to parameters file, path to target folder, path to input folder)
+        tuple: (path to parameters file,  input, output, work, param_files)
     """
     here = os.getcwd()
 
-    if not target:
-        target = os.path.join(here, 'output')
+    if io == 'split':
+        if not input_path:
+            input_path = os.path.join(here, 'input')
 
-    if not os.path.exists(target):
-        os.mkdir(target)
+        if not os.path.exists(input_path):
+            raise IOError("input path '%s' doesn't exist" % input_path)
+
+        if not output_path:
+            output_path = os.path.join(here, 'output')
+
+        if not os.path.exists(output_path):
+            os.mkdir(output_path)
+
+    elif io == 'join':
+        if not work_path:
+            work_path = os.path.join(here, 'input')
+
+        if not os.path.exists(work_path):
+            raise IOError("work path '%s' doesn't exist" % work_path)
 
     if sys.platform == "darwin":
         # tempfolder not mounted into docker virtual machine
         parameters_path = os.path.join(here, 'parameters.json')
         parameters_file = open(parameters_path, 'w')
-        input_ = os.path.join(here, 'input')
-        if not os.path.exists(input_):
-            os.mkdir(input_)
+
+        if not param_files_path:
+            param_files_path = os.path.join(here, 'param_files')
+        if not os.path.exists(param_files_path):
+            os.mkdir(param_files_path)
     else:
         _, parameters_path = tempfile.mkstemp()
         parameters_file = open(parameters_path, 'w')
-        input_ = tempfile.mkdtemp()
+        param_files_path = tempfile.mkdtemp()
 
     parameters_file.write(parameters)
     parameters_file.close()
-    return parameters_path, target, input_
+    return parameters_path, input_path, output_path, work_path, param_files_path
 
 
 def first_parser(argv):
@@ -136,7 +163,7 @@ Use:
 
   $ kliko-run <kliko-image> --help
 
-to see the list of accepted arguments for the kliko image. But default kliko-run will create an output folder
+to see the list of accepted arguments for the kliko image. By default kliko-run will create an output folder
 in the current working folder where the results of the Kliko run are written to.
 
 Note that you still need to download (docker pull) or build the Kliko image yourself.
@@ -158,15 +185,28 @@ def second_parser(argv, kliko_data):
     # we recreate parser since otherwise we have a double help conflict
     no_help_parser = argparse.ArgumentParser(description='kliko runner', add_help=False)
     no_help_parser.add_argument('image_name', type=str)
-    no_help_parser.add_argument('--target_folder', type=str)
 
     final_parser = generate_kliko_cli_parser(kliko_data, no_help_parser)
     final_parsed = final_parser.parse_args(argv[1:])
-    target = final_parsed.target_folder
     parameters = vars(final_parsed)
+
+    work = False
+    if 'work' in final_parsed:
+        work = final_parsed.work
+        parameters.pop('work')
+
+    input_ = False
+    if 'input' in final_parsed:
+        input_ = final_parsed.input
+        parameters.pop('input')
+
+    output = False
+    if 'output' in final_parsed:
+        output = final_parsed.output
+        parameters.pop('output')
+
     parameters.pop('image_name')
-    parameters.pop('target_folder')
-    return parameters, target
+    return parameters, input_, output, work
 
 
 def kliko_runner(argv):
@@ -188,9 +228,12 @@ def kliko_runner(argv):
 
     kliko_data = validate_kliko(yaml.safe_load(raw_kliko_data))
 
-    parameters, target = second_parser(argv, kliko_data)
+    parameters, input_path, output_path, work_path = second_parser(argv, kliko_data)
     parameters_string = json.dumps(parameters)
-    parameters_file, target, input_ = prepare_io(parameters_string, target=target)
+    parameters_path, input_path, output_path, work_path, param_files_path = prepare_io(parameters_string,
+                                                                                       input_path=input_path,
+                                                                                       output_path=output_path,
+                                                                                       work_path=work_path)
 
     files = []
     for section in kliko_data['sections']:
@@ -198,21 +241,24 @@ def kliko_runner(argv):
             if field['type'] == 'file':
                 files.append((field['name'], parameters[field['name']]))
 
+    for fieldname, path in files:
+        copyfile(path, os.path.join(param_files_path, fieldname))
+
     if kliko_data['io'] == 'split':
         binds = [
-            input_ + ':/input:ro',
-            target + ':/output:rw',
-            parameters_file + ':/parameters.json:ro',
+            input_path + ':/input:ro',
+            output_path + ':/output:rw',
+            parameters_path + ':/parameters.json:ro',
+            param_files_path + ':/param_files:ro',
         ]
-        for fieldname, path in files:
-            copyfile(path, os.path.join(input_, fieldname))
+
     else:
         binds = [
             target + ':/work:rw',
-            parameters_file + ':/parameters.json:ro',
+            work_path + ':/parameters.json:ro',
+            parameters_path + ':/parameters.json:ro',
+            param_files_path + ':/param_files:ro',
         ]
-        for fieldname, path in files:
-            copyfile(path, os.path.join(target, fieldname))
 
     host_config = docker_client.create_host_config(binds=binds)
 

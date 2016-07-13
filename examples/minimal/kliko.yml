@@ -1,10 +1,7 @@
-schema_version: 2
+schema_version: 3
 name: kliko test image
 description: for testing purposes only
-container: radioastro/klikotest
-author: Gijs Molenaar
-email: gijsmolenaar@gmail.com
-url: http://github.com/gijzelaerr/kliko
+url: https://github.com/gijzelaerr/kliko/tree/master/examples/fitsdoubler
 io: split
 
 sections:
@@ -22,10 +19,10 @@ sections:
           first: option 1
           second: option 2
       -
-        name: char
+        name: string
         label: char field
         help_text: maximum of 10 chars
-        type: char
+        type: str
         max_length: 10
         initial: empty
         required: True

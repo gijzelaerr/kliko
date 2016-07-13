@@ -17,7 +17,8 @@ def extract_params(docker_client, image_name):
     returns:
         str: content of the param schema
     """
-    container = docker_client.create_container(image=image_name, command=['/bin/cat', '/kliko.yml'])
+    container = docker_client.create_container(image=image_name,
+                                               command=['/bin/cat', '/kliko.yml'])
     docker_client.start(container)
     error_code = docker_client.wait(container)
     warnings = container.get('Warnings')

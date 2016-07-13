@@ -32,20 +32,25 @@ Kliko runner
 Something that can run a kliko image. For example the ``kliko-run`` command line tool, or RODRIGUES.
 
 
-The kliko.yml file
-------------------
+The ``/kliko.yml`` file
+-----------------------
 
 A yaml formatted file confirming to the Kliko specification that defines the parameters a Kliko container is expecting.
 This is the file you want to create and add to your dockdr image if you want to create a Kliko container.
 
 
-The parameters.json file
-------------------------
+The ``/parameters.json`` file
+-----------------------------
 
 A json encoded structure that contains all the parameter values for your compute task. This file is presented to your
 container at runtime by the container runner, for example RODRIGUES or Nextflow. The valid fields are defined
 by the Kliko image container and are defined in the ``kliko.yml`` file.
 
 
+The ``/param_files`` folder
+---------------------------
+
+Files defined in the ``kliko.yml`` file and specified during runtime should be copied to the ``param_file`` folder
+by the kliko runner.
 
 

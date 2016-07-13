@@ -5,11 +5,12 @@ from pykwalify.core import Core
 import yaml
 import json
 import os
-
+from kliko import parameters_file as parameters_file_default
+from kliko import kliko_file as kliko_file_default
 
 here = os.path.dirname(os.path.realpath(__file__))
 
-SCHEMA_VERSION = 2
+SCHEMA_VERSION = 3
 
 
 def validate_kliko(kliko, version=SCHEMA_VERSION):
@@ -82,7 +83,7 @@ def validate_parameters(parameters, kliko):
     return True
 
 
-def validate(kliko_file='/kliko.yml', paramaters_file='/parameters.json'):
+def validate(kliko_file=False, paramaters_file=False):
     """
     Validate the kliko and paramaters file and parse the parameters file. Should be run inside
     the Kliko container.
@@ -94,6 +95,8 @@ def validate(kliko_file='/kliko.yml', paramaters_file='/parameters.json'):
     Returns:
         The validated and parsed paramaters file
     """
+    kliko_file = kliko_file or kliko_file_default
+    paramaters_file = paramaters_file or parameters_file_default
 
     with open(kliko_file, 'r') as f:
         kliko = yaml.safe_load(f)

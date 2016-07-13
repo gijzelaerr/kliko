@@ -7,10 +7,10 @@ from builtins import open
 import kliko.docker
 from kliko.exceptions import KlikoException
 
-TEST_IMAGE = 'radioastro/klikotest'
+TEST_IMAGE = 'kliko/minimal'
 
 
-PARAMS_FILE = os.path.join(os.path.dirname(__file__), '../examples/kliko.yml')
+PARAMS_FILE = os.path.join(os.path.dirname(__file__), '../examples/minimal/kliko.yml')
 
 
 class TestUtils(unittest.TestCase):

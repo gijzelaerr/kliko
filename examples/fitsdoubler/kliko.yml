@@ -1,0 +1,24 @@
+schema_version: 3
+name: kliko test image
+description: for testing purposes only
+url: https://github.com/gijzelaerr/kliko/tree/master/examples/fitsdoubler
+io: split
+
+sections:
+  -
+    name: Parameters
+    description: Parameters for doublin the fits
+    fields:
+      -
+        name: match
+        label: Matching string
+        help_text: Pattern for matching fits files
+        type: string
+        initial: *.fits
+        required: True
+      -
+        name: float
+        label: multiplication factor
+        type: float
+        initial: 2.0
+        required: True

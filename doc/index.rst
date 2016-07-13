@@ -14,6 +14,7 @@ Contents:
    introduction
    terminology
    specification
+   inside
    cli
    API
 

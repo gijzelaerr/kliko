@@ -1,0 +1,2 @@
+An example Kliko container. Will read all fits files in the input, multiply the
+flux with a given factor (default 2) and write results to output.

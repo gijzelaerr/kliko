@@ -1,4 +1,4 @@
-DOCKER_REPO=radioastro/klikotest
+DOCKER_REPO=kliko/minimal
 
 
 .PHONY: build clean

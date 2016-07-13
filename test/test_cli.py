@@ -31,7 +31,7 @@ class TestCli(unittest.TestCase):
         with self.assertRaises(SystemExit):
             kliko.cli.second_parser(['kliko-run', 'radioastro/klikotest', '--help'], kliko_data)
 
-        kliko.cli.second_parser(['kliko-run', 'radioastro/klikotest', '--choice', 'second', '--char', 'gijs',
+        kliko.cli.second_parser(['kliko-run', 'radioastro/klikotest', '--choice', 'second', '--string', 'gijs',
                                  '--file', this_file, '--int', '10'], kliko_data)
 
     def test_kliko_runner(self):

@@ -28,7 +28,7 @@ The version of the kliko specification. note that this is independent of the ver
 name
 ----
 
-Name of the kliko image. For example ``radioastro/simulator``.
+Name of the kliko image. For example ``radioastro/simulator``. Optional.
 
 
 description
@@ -40,13 +40,13 @@ A more detailed description of the image.
 author
 ------
 
-Who made the container.
+Who made the container. Optional.
 
 
 email
 -----
 
-email adres of the author.
+email adres of the author. Optional.
 
 
 url
@@ -80,7 +80,8 @@ field
 
 each field has 2 obligatory keys, a ``name`` and a ``type``. Name is a short reference to the field which needs to be
 unique. This will be the name for internal reference. The type defines the ``type`` of the field and can be one of
-``choice``, ``char``, ``float``, ``file``, ``bool`` or ``int``.
+``choice``, ``string``, ``float``, ``file``, ``bool`` or
+``int``.
 
 
 Optional keys are:
@@ -97,7 +98,7 @@ An example kliko.yml file
 
 Below is an example kliko file.
 
-.. literalinclude:: ../examples/kliko.yml
+.. literalinclude:: ../examples/minimal/kliko.yml
    :language: yaml
    :linenos:
 
@@ -108,6 +109,6 @@ Loading a Kliko container with the previous kliko file is loaded up in RODRIGUES
 Processing this form will result in the following parameters.json file which is presented to the Kliko container
 on runtime:
 
-.. literalinclude:: ../examples/parameters.json
+.. literalinclude:: ../examples/minimal/parameters.json
    :language: json
    :linenos:
