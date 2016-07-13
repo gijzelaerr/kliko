@@ -1,4 +1,4 @@
-DOCKER_REPO=kliko/fitsdouble
+DOCKER_REPO=kliko/fitsdoubler
 
 .PHONY: build clean
 
@@ -12,5 +12,6 @@ clean:
 	docker rmi ${DOCKER_REPO}
 
 run: build
-	docker run -ti ${DOCKER_REPO}
+	#	docker run -ti ${DOCKER_REPO}
+	kliko-run kliko/fitsdoubler
 
