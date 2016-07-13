@@ -37,7 +37,7 @@ or to check if a kliko file has a valid syntax::
 
 or try to run the docker image from the examples folder directly::
 
-    $ kliko-run radioastro/klikotest --help
+    $ kliko-run kliko/minimal --help
 
         usage: kliko-run [-h] [--target_folder TARGET_FOLDER] --choice {second,first}
                          --char CHAR [--float FLOAT] --file FILE --int INT
