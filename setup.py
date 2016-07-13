@@ -1,18 +1,18 @@
 from setuptools import setup, find_packages
 
-__version__ = "0.6.1"
+__version__ = "0.6.2"
 
 
 install_requires = [
     'pykwalify',
     'PyYAML',
     'future',
-    'docopt'
+    'docopt',
+    'docker-py',
 ]
 
 extras_require = {
     'django': ['django', 'django-form-utils'],
-    'docker': ['docker-py'],
 }
 
 scripts = [
