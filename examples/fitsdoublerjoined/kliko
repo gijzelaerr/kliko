@@ -1,0 +1,23 @@
+#!/usr/bin/env python
+
+from os import path
+from glob import glob
+from astropy.io import fits
+import kliko
+from kliko.validate import validate
+
+parameters = validate()
+
+pattern = parameters['pattern']
+files = glob(path.join(kliko.work_path, pattern))
+factor = parameters['factor']
+
+
+print('welcome to fits multiply!')
+print("based on pattern '%s' I will multiply these files with a factor of '%s':" % (pattern, factor))
+
+for file_ in files:
+    print(" * " + file_)
+    data = fits.getdata(file_)
+    multiplied = data * factor
+    fits.writeto(file_, multiplied, clobber=True)

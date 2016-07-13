@@ -1,0 +1,6 @@
+An example Kliko container. Will read all fits files in the work folder, multiply the
+flux with a given factor (default 2) and write results back.
+
+This is the same as the fitsdoubler example, apart from that it will override the original fits file
+
+
