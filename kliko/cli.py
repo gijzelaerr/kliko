@@ -53,7 +53,7 @@ def generate_kliko_cli_parser(kliko_data, parent_parser=None):
     if kliko_data['io'] == 'split':
         parser.add_argument('--output', type=str)
         parser.add_argument('--input', type=str)
-    elif kliko_data['io'] == 'joined':
+    elif kliko_data['io'] == 'join':
         parser.add_argument('--work', type=str)
 
     for section in kliko_data['sections']:
@@ -99,7 +99,7 @@ def generate_kliko_cli_parser(kliko_data, parent_parser=None):
     return parser
 
 
-def prepare_io(parameters, io='split', input_path=False, output_path=False, work_path=False, param_files_path=False):
+def prepare_io(parameters, io, input_path=False, output_path=False, work_path=False, param_files_path=False):
     """
     args:
         parameters: A dict containing the parameters
@@ -128,7 +128,7 @@ def prepare_io(parameters, io='split', input_path=False, output_path=False, work
 
     elif io == 'join':
         if not work_path:
-            work_path = os.path.join(here, 'input')
+            work_path = os.path.join(here, 'work')
 
         if not os.path.exists(work_path):
             raise IOError("work path '%s' doesn't exist" % work_path)
@@ -231,6 +231,7 @@ def kliko_runner(argv):
     parameters, input_path, output_path, work_path = second_parser(argv, kliko_data)
     parameters_string = json.dumps(parameters)
     parameters_path, input_path, output_path, work_path, param_files_path = prepare_io(parameters_string,
+                                                                                       io=kliko_data['io'],
                                                                                        input_path=input_path,
                                                                                        output_path=output_path,
                                                                                        work_path=work_path)
@@ -254,8 +255,7 @@ def kliko_runner(argv):
 
     else:
         binds = [
-            target + ':/work:rw',
-            work_path + ':/parameters.json:ro',
+            work_path + ':/work:rw',
             parameters_path + ':/parameters.json:ro',
             param_files_path + ':/param_files:ro',
         ]

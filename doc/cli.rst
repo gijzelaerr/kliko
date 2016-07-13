@@ -6,7 +6,12 @@ kliko-run
 ---------
 
 Use this to run the container. Use ``kliko-run <image-name> --help`` to see a list of accepted kliko paramaters, which
-are kliko container specific.
+are kliko container specific. You can override the default input, output (split io) and work (join io) folders using
+``--input``, ``--output`` and ``--work`` flags.
+
+.. attention::
+
+    Always supply absolute paths to these flags, not absolulte. Docker doesn't work well with relative paths.
 
 .. note::
 
