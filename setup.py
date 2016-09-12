@@ -5,7 +5,6 @@ __version__ = "0.7"
 
 install_requires = [
     'pykwalify',
-    'PyYAML',
     'future',
     'docopt',
     'docker-py',
