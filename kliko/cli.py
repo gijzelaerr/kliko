@@ -262,7 +262,7 @@ def kliko_runner(argv):
 
     host_config = docker_client.create_host_config(binds=binds)
 
-    container = docker_client.create_container(image=image_name, host_config=host_config)
+    container = docker_client.create_container(image=image_name, host_config=host_config, command='/kliko')
     docker_client.start(container)
     error_code = docker_client.wait(container)
     warnings = container.get('Warnings')
