@@ -1,3 +1,10 @@
+current
+======
+
+* Run /kliko, not the default docker CMD
+* Add simms example
+
+
 0.7
 ===
 

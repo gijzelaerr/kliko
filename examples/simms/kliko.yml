@@ -1,0 +1,54 @@
+schema_version: 3
+name: simms
+description: Create a simulated measurement set
+url: https://github.com/gijzelaerr/kliko/tree/master/examples/simms
+io: split
+
+sections:
+  -
+    name: paramaters
+    description: simms paramaters
+    fields:
+      -
+        name: name
+        label:  MS name
+        help_text: Measurement Met name. A name based on the observatoion will be generated otherwise.
+        type: str
+      -
+        name: tel
+        label: telescope name
+        type: str
+      -
+        name: dir
+        type: str
+        label: direction
+        help_text: Pointing direction. Example J2000,0h0m0s,-30d0m0d
+      -
+        name: synthesis-time
+        label: synhesis time
+        help_text: Synthesis time in hours
+        type: float
+        initial: 4.0
+      -
+        name: dtime
+        label: integration time
+        help_text: Integration time in seconds
+        type: float
+        initial: 10
+      -
+        name: freq0
+        label: start frequency
+        help_text: Specify as val[unit]. E.g 700MHz, not unit => Hz . Use a comma seperated list for multiple start frequencies (for multiple subbands)
+        type: float
+        initial: 700
+      -
+        name: dfreq
+        label: channel width
+        help_text: Specify as val[unit]. E.g 700MHz, not unit => Hz Use a comma separated list of channel widths (for multiple subbands)
+        type: float
+        initial: 50
+      -
+        name: nchan
+        label: Number of frequency channels
+        type: int
+        initial: 1

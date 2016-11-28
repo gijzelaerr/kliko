@@ -1,0 +1,15 @@
+#!/usr/bin/env python
+
+import os
+from kliko.validate import validate
+import subprocess
+
+parameters = validate()
+
+
+binary = "/usr/local/bin/simms"
+
+cmd = [binary] + ["--{}={}".format(k, v) for k, v in parameters.items() if v]
+
+subprocess.call(cmd)
+
