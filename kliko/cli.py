@@ -243,7 +243,8 @@ def kliko_runner(argv):
                 files.append((field['name'], parameters[field['name']]))
 
     for fieldname, path in files:
-        copyfile(path, os.path.join(param_files_path, fieldname))
+        if path:
+            copyfile(path, os.path.join(param_files_path, fieldname))
 
     if kliko_data['io'] == 'split':
         binds = [
