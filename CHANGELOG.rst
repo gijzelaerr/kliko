@@ -1,8 +1,10 @@
-current
-======
+0.7.1
+=====
 
 * Run /kliko, not the default docker CMD
 * Add simms example
+* dont try to copy empty file field
+* remove explicit pyyaml dependency
 
 
 0.7
