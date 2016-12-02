@@ -1,0 +1,31 @@
+schema_version: 3
+name: simulator
+description: Simulates visabilites into a simulated measurement set
+url: https://github.com/gijzelaerr/kliko/tree/master/examples/simulator
+io: split
+
+sections:
+  -
+    name: parameters
+    description: simulator paramaters
+    fields:
+      -
+        name: pbeam
+        type: bool
+        initial: false
+      -
+        name: reciever_gains
+        type: bool
+        initial: false
+      -
+        name: sefd
+        type: int
+        initial: 831
+      -
+        name: addnoise
+        type: bool
+        initial: true
+      -
+        name: skymodel
+        type: str
+        initial: s-cubed_1deg_400uJy.lsm.html
