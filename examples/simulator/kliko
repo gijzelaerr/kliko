@@ -16,9 +16,7 @@ os.chdir("/output")
 parameters = validate()
 
 # format kliko arguments into simms arguments
-cmd = [binary] + ["--{}={}".format(k, v) for k, v in parameters.items() if v]
-
-#{"pbeam": false, "reciever_gains": false, "sefd": 831, "outdir": "/output", "addnoise": true, "skymodel": "s-cubed_1deg_400uJy.lsm.html", "indir": "/input"}
+cmd = [binary, "azishe", "-f"] + ["{}={}".format(k, v) for k, v in parameters.items() if v]
 
 # call the simms
 subprocess.call(cmd)
