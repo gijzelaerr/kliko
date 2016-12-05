@@ -1,4 +1,4 @@
-DOCKER_REPO=kliko/simulator
+DOCKER_REPO=kliko/meqtree-pipeliner
 
 
 .PHONY: build force-build clean run

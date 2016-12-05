@@ -1,0 +1,34 @@
+#!/usr/bin/env python
+"""
+This is the simulator file. Is is ment to be called from
+inside a kliko container. 
+"""
+import os
+from kliko.validate import validate
+import kliko
+import subprocess
+import shutil
+
+binary = "/usr/bin/meqtree-pipeliner.py"
+
+# validate and parse the kliko arguments
+parameters = validate()
+
+# we cant write to input, so first copy input to output
+for dir_ in [i for i in os.listdir(kliko.input_path) if i.endswith(".MS")]:
+    ro = os.path.join(kliko.input_path, dir_)
+    rw = os.path.join(kliko.output_path, dir_)
+
+    shutil.copytree(ro, rw)
+
+    # format kliko arguments into simms arguments
+    cmd = [binary, "--mt", "16", "[sim]", rw, "ms_sel.field_index=0",
+            "ms_sel.select_channels=0", "ms_sel.ms_ifr_subset_str=all",
+            "tiggerlsm.filename=nvss1deg.lsm.html", "sim_mode=sim", "only",
+            "ms_sel.input_column=None", "ms_sel.output_column=CORRECTED_DATA",
+            "/usr/lib/python2.7/dist-packages/Cattery/Siamese/turbo-sim.py",
+            "=_tdl_job_1_simulate_MS"]
+
+    # call the simms
+    subprocess.call(cmd)
+

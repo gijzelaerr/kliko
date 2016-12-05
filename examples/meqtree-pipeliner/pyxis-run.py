@@ -16,8 +16,8 @@ def _loadconfs_Template():
 
 
 mqt.MULTITHREAD = 16
-INDIR = os.environ["INPUT"]
-v.OUTDIR = os.environ["OUTPUT"]
+INDIR = "/input"
+v.OUTDIR = "/output"
 CONFIG = os.environ["CONFIG"]
 MSDIR = os.environ["MSDIR"]
 

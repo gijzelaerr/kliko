@@ -1,5 +1,5 @@
 schema_version: 3
-name: simulator
+name: meqtrees-pipeliner
 description: Simulates visabilites into a simulated measurement set
 url: https://github.com/gijzelaerr/kliko/tree/master/examples/simulator
 io: split
