@@ -15,14 +15,20 @@ binary = "/usr/bin/meqtree-pipeliner.py"
 parameters = validate()
 
 # we cant write to input, so first copy input to output
-for dir_ in [i for i in os.listdir(kliko.input_path) if i.endswith(".MS")]:
-    ro = os.path.join(kliko.input_path, dir_)
-    rw = os.path.join(kliko.output_path, dir_)
+for msname in [i for i in os.listdir(kliko.input_path) if i.endswith(".MS")]:
+    ro = os.path.join(kliko.input_path, msname)
+
+    rw = os.path.join(kliko.output_path, msname)
+
+    # remove target if already exists
+    if os.access(rw, os.R_OK):
+        print("warning: {} already exists, removing.".format(rw))
+        shutil.rmtree(rw)
 
     shutil.copytree(ro, rw)
 
     # format kliko arguments into simms arguments
-    cmd = [binary, "--mt", "16", "[sim]", rw, "ms_sel.field_index=0",
+    cmd = [binary, "--mt", "16", "[sim]", rw, "ms_sel.field_index=0", "ms_sel.msname=" + msname,
             "ms_sel.select_channels=0", "ms_sel.ms_ifr_subset_str=all",
             "tiggerlsm.filename=nvss1deg.lsm.html", "sim_mode=sim", "only",
             "ms_sel.input_column=None", "ms_sel.output_column=CORRECTED_DATA",
