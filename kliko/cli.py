@@ -9,7 +9,7 @@ import os
 import yaml
 
 import docker
-from core import kliko_runner
+from kliko.core import kliko_runner
 from kliko.docker_util import extract_params
 from kliko.validate import validate_kliko
 

@@ -38,20 +38,19 @@ def make_hash(o):
 
     new_o = copy.deepcopy(o)
 
-    for k, v in new_o.items():
+    for k, v in sorted(new_o.items()):
         new_o[k] = make_hash(v)
 
     return sha256(str(frozenset(new_o.items())).encode('utf-8')).hexdigest()
 
 
-
-def run_chain(images):
+def run_chain(steps):
     if not os.path.isdir(kliko_dir):
         os.mkdir(kliko_dir)
 
     docker_client = docker.Client()
 
-    for image_name in images:
+    for image_name, parameters in steps:
         img_list = docker_client.images(name=image_name)
         if len(img_list) == 0:
             raise Exception("image {} not found".format(img_list))
@@ -67,7 +66,6 @@ def run_chain(images):
 
         raw_kliko_data = extract_params(docker_client, image_name)
         kliko_data = validate_kliko(yaml.safe_load(raw_kliko_data))
-        parameters = {}   # set the parameters here
 
         kliko_data.update(parameters)
         para_hash = make_hash(kliko_data)
@@ -88,4 +86,10 @@ def run_chain(images):
 
 if __name__ == '__main__':
     logging.basicConfig(level=logging.INFO)
-    run_chain(['kliko/simms', 'kliko/meqtree-pipeliner', 'kliko/wsclean'])
+    run_chain(
+        (
+            ('kliko/simms',  {'tel': 'meerkat'}),
+            ('kliko/meqtree-pipeliner', {}),
+            ('kliko/wsclean', {}),
+        )
+    )
