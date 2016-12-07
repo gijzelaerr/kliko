@@ -1,6 +1,7 @@
 *.pyc
 dist/
 kliko.egg-info/
+.kliko/
 .tox
 build/
 .virtualenv/

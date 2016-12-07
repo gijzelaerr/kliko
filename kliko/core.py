@@ -61,7 +61,7 @@ def prepare_io(parameters, io, input_path=False, output_path=False, work_path=Fa
     return parameters_path, input_path, output_path, work_path, param_files_path
 
 
-def kliko_runner(kliko_data, parameters, input_path, output_path, work_path, docker_client, image_name):
+def kliko_runner(kliko_data, parameters, docker_client, image_name, input_path=None, output_path=None, work_path=None):
     io = kliko_data['io']
     parameters_string = json.dumps(parameters)
     parameters_path, input_path, output_path, work_path, param_files_path = prepare_io(parameters_string,

@@ -3,7 +3,7 @@ import tempfile
 import os
 import sys
 
-import core
+from kliko import  core
 import kliko.cli
 from kliko.testutil import kliko_data, parameters_str
 

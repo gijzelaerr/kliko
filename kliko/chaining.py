@@ -1,16 +1,10 @@
 from hashlib import sha256
 import os
-import copy
 import logging
-import docker
 import yaml
 from kliko.docker_util import extract_params
 from kliko.validate import validate_kliko
 from kliko.core import kliko_runner
-
-here = os.getcwd()
-
-kliko_dir = os.path.join(here, ".kliko")
 
 
 logger = logging.getLogger(__name__)
@@ -24,31 +18,19 @@ def mkdir_if_not_exists(dir):
         os.mkdir(dir)
 
 
-def make_hash(o):
-    """
-    Makes a hash from a dictionary, list, tuple or set to any level, that contains
-    only other hashable types (including any lists, tuples, sets, and
-    dictionaries).
-    """
-
-    if isinstance(o, (set, tuple, list)):
-        return tuple([make_hash(e) for e in o])
-    elif not isinstance(o, dict):
-        return hash(o)
-
-    new_o = copy.deepcopy(o)
-
-    for k, v in sorted(new_o.items()):
-        new_o[k] = make_hash(v)
-
-    return sha256(str(frozenset(new_o.items())).encode('utf-8')).hexdigest()
+def dict2sha256(dict_):
+    return sha256(str(frozenset(dict_.items())).encode('utf-8')).hexdigest()
 
 
-def run_chain(steps):
+def run_chain(steps, docker_client, kliko_dir=None):
+    if not kliko_dir:
+        here = os.getcwd()
+        kliko_dir = os.path.join(here, ".kliko")
+
     if not os.path.isdir(kliko_dir):
         os.mkdir(kliko_dir)
 
-    docker_client = docker.Client()
+    previous_output = None
 
     for image_name, parameters in steps:
         img_list = docker_client.images(name=image_name)
@@ -61,35 +43,48 @@ def run_chain(steps):
         short_id = id_[:12]
 
         image_folder = os.path.join(kliko_dir, short_id)
-
         mkdir_if_not_exists(image_folder)
-
         raw_kliko_data = extract_params(docker_client, image_name)
         kliko_data = validate_kliko(yaml.safe_load(raw_kliko_data))
-
-        kliko_data.update(parameters)
-        para_hash = make_hash(kliko_data)
+        para_hash = dict2sha256(parameters)
         short_para_hash = para_hash[:12]
-
         instance_path = os.path.join(image_folder, short_para_hash)
-
         mkdir_if_not_exists(instance_path)
+        finished_path = os.path.join(instance_path, 'FINISHED')
 
-        input_path = os.path.join(instance_path, 'input')
-        mkdir_if_not_exists(input_path)
-        output_path = os.path.join(instance_path, 'output')
-        mkdir_if_not_exists(output_path)
-        work_path = os.path.join(instance_path, 'work')
-        mkdir_if_not_exists(work_path)
-        kliko_runner(kliko_data, parameters, input_path, output_path, work_path, docker_client, image_name)
+        if kliko_data['io'] == 'split':
+            if not previous_output:
+                input_path = os.path.join(instance_path, 'input')
+            else:
+                input_path = previous_output
+
+            mkdir_if_not_exists(input_path)
+            output_path = os.path.join(instance_path, 'output')
+            mkdir_if_not_exists(output_path)
+            work_path = None
+            previous_output = output_path
+        if kliko_data['io'] == 'join':
+            if not previous_output:
+                work_path = os.path.join(instance_path, 'work')
+            else:
+                work_path = previous_output
+            mkdir_if_not_exists(work_path)
+            input_path = None
+            output_path = None
+            previous_output = work_path
+
+        if os.access(finished_path, os.R_OK):
+            logger.info("free lunch! task {} ({}) already finished! skipping.".format(short_id, image_name))
+            continue
+
+        open(finished_path, 'a').close()
+
+        kliko_runner(kliko_data=kliko_data,
+                     parameters=parameters,
+                     work_path=work_path,
+                     input_path=input_path,
+                     output_path=output_path,
+                     docker_client=docker_client,
+                     image_name=image_name)
 
 
-if __name__ == '__main__':
-    logging.basicConfig(level=logging.INFO)
-    run_chain(
-        (
-            ('kliko/simms',  {'tel': 'meerkat'}),
-            ('kliko/meqtree-pipeliner', {}),
-            ('kliko/wsclean', {}),
-        )
-    )
