@@ -70,14 +70,14 @@ def kliko_runner(kliko_data, parameters, input_path, output_path, work_path, doc
                                                                                        output_path=output_path,
                                                                                        work_path=work_path)
 
-    logging.info("* KLIKO io: {}".format(io))
-    logging.info("* KLIKO parameters_path: {}".format(parameters_path))
-    logging.info("* KLIKO param_files_path: {}".format(param_files_path))
+    logging.info("io: {}".format(io))
+    logging.info("parameters_path: {}".format(parameters_path))
+    logging.info("param_files_path: {}".format(param_files_path))
     if io == "joined":
-        logging.info("* KLIKO work_path: {}".format(work_path))
+        logging.info("work_path: {}".format(work_path))
     else:
-        logging.info("* KLIKO input_path: {}".format(input_path))
-        logging.info("* KLIKO output_path: {}".format(output_path))
+        logging.info("input_path: {}".format(input_path))
+        logging.info("output_path: {}".format(output_path))
 
     files = []
     for section in kliko_data['sections']:
@@ -107,9 +107,9 @@ def kliko_runner(kliko_data, parameters, input_path, output_path, work_path, doc
     host_config = docker_client.create_host_config(binds=binds)
 
     container = docker_client.create_container(image=image_name, host_config=host_config, command='/kliko')
-    logger.info("* KLIKO container {} created from image {}".format(container['Id'], image_name))
+    logger.info("container {} created from image {}".format(container['Id'], image_name))
     docker_client.start(container)
-    logger.info("* KLIKO starting container {}".format(container['Id']))
+    logger.info("starting container {}".format(container['Id']))
     warnings = container.get('Warnings')
     if warnings:
         for warning in warnings:
@@ -118,10 +118,12 @@ def kliko_runner(kliko_data, parameters, input_path, output_path, work_path, doc
         try:
             logging.info(line.decode('utf-8')[:-1])  # decode and remove endline
         except UnicodeEncodeError:
-            logging.error("* KLIKO utf8 decode error: " + str(line))
+            logging.error("utf8 decode error: " + str(line))
     error_code = docker_client.wait(container)
-    logger.info("* KLIKO container {} finished, removing...".format(container['Id']))
+    logger.info("container {} finished, removing...".format(container['Id']))
     docker_client.remove_container(container)  # always clean up the container
     if error_code != 0:
-        logging.error("* KLIKO container error code is {}".format(error_code))
-        exit(1)
+        logging.error("kliko container returned error code {}".format(error_code))
+        raise Exception()
+    else:
+        logging.info("kliko container returned error code {}".format(error_code))
