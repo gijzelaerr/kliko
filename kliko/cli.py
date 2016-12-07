@@ -166,5 +166,3 @@ def command_line_run(argv):
     parameters, input_path, output_path, work_path = second_parser(argv, kliko_data)
     kliko_runner(kliko_data, parameters, input_path, output_path,
                  work_path, docker_client, image_name)
-
-

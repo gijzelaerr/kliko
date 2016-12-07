@@ -101,5 +101,3 @@ def run_chain(steps, docker_client, kliko_dir=None):
 
         open(finished_path, 'a').close()
         logger.info("{} ({}/{}) is finished!".format(image_name, short_id, short_para_hash))
-
-

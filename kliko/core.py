@@ -127,3 +127,4 @@ def kliko_runner(kliko_data, parameters, docker_client, image_name, input_path=N
         raise Exception()
     else:
         logging.info("kliko container returned error code {}".format(error_code))
+

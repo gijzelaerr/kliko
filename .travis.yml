@@ -28,7 +28,7 @@ install:
 
 script:
  - nosetests --with-coverage  --cover-package=kliko
- - pep8 --ignore=E501 kliko
+ - pep8 --ignore=E501,W391,W292 kliko
  - cd doc
  - sphinx-build -b html -d _build/doctrees -W  . _build/html
  - cd ..
