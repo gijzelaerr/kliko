@@ -2,6 +2,8 @@ import unittest
 import tempfile
 import os
 import sys
+
+import core
 import kliko.cli
 from kliko.testutil import kliko_data, parameters_str
 
@@ -27,7 +29,7 @@ class TestCli(unittest.TestCase):
 
     def test_prepare_io(self):
 
-        kliko.cli.prepare_io(parameters_str, io='split', input_path=self.input_)
+        core.prepare_io(parameters_str, io='split', input_path=self.input_)
 
     def test_first_parser(self):
         with self.assertRaises(SystemExit):
@@ -53,13 +55,13 @@ class TestCli(unittest.TestCase):
 
     def test_kliko_runner(self):
         with self.assertRaises(SystemExit):
-            kliko.cli.kliko_runner(['kliko-run'])
+            kliko.cli.command_line_run(['kliko-run'])
         with self.assertRaises(SystemExit):
-            kliko.cli.kliko_runner(['kliko-run', '--help'])
+            kliko.cli.command_line_run(['kliko-run', '--help'])
         with self.assertRaises(SystemExit):
-            kliko.cli.kliko_runner(['kliko-run', 'kliko/minimal'])
+            kliko.cli.command_line_run(['kliko-run', 'kliko/minimal'])
         with self.assertRaises(SystemExit):
-            kliko.cli.kliko_runner(['kliko-run', 'kliko/minimal', '--help'])
+            kliko.cli.command_line_run(['kliko-run', 'kliko/minimal', '--help'])
 
-        kliko.cli.kliko_runner(['kliko-run', 'kliko/minimal', '--choice', 'second', '--string', 'gijs',
+        kliko.cli.command_line_run(['kliko-run', 'kliko/minimal', '--choice', 'second', '--string', 'gijs',
                                  '--file', this_file, '--int', '10', '--input', self.input_])

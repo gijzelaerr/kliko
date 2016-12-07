@@ -101,11 +101,21 @@ def validate(kliko_file=False, paramaters_file=False):
     with open(kliko_file, 'r') as f:
         kliko = yaml.safe_load(f)
 
-    validate_kliko(kliko)
-
     with open(paramaters_file, 'r') as f:
         parameters = json.load(f)
 
+    return validate_opened(kliko, parameters)
+
+
+def validate_opened(kliko, parameters):
+    validate_kliko(kliko)
     validate_parameters(parameters, kliko)
 
-    return parameters
+    defaults = {}
+    for section in kliko['sections']:
+        for field in section['fields']:
+            if 'initial' in field:
+                defaults[field['name']] = field['initial']
+
+    defaults.update(parameters)
+    return defaults
