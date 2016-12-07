@@ -28,7 +28,7 @@ for msname in [i for i in os.listdir(kliko.input_path) if i.endswith(".MS")]:
     shutil.copytree(ro, rw)
 
     # format kliko arguments into simms arguments
-    cmd = [binary, "--mt", "16", "[sim]", rw, "ms_sel.field_index=0", "ms_sel.msname=" + msname,
+    cmd = [binary, "--mt", "16", "[sim]", "ms_sel.field_index=0", "ms_sel.msname=" + rw,
             "ms_sel.select_channels=0", "ms_sel.ms_ifr_subset_str=all",
             "tiggerlsm.filename=nvss1deg.lsm.html", "sim_mode=sim", "only",
             "ms_sel.input_column=None", "ms_sel.output_column=CORRECTED_DATA",
