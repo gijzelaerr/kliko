@@ -1,0 +1,39 @@
+#!/usr/bin/env python
+"""
+This is the simulator file. Is is ment to be called from
+inside a kliko container. 
+"""
+import os
+from kliko.validate import validate
+import kliko
+import subprocess
+import shutil
+from itertools import chain
+
+binary = "/usr/bin/wsclean"
+
+# validate and parse the kliko arguments
+parameters = validate()
+
+args =  list(chain(["-" + k, v] for k, v in parameters.items()))[0]
+
+# we cant write to input, so first copy input to output
+for msname in [i for i in os.listdir(kliko.input_path) if i.endswith(".MS")]:
+    ro = os.path.join(kliko.input_path, msname)
+    rw = os.path.join(kliko.output_path, msname)
+
+    # remove target if already exists
+    if os.access(rw, os.R_OK):
+        print("warning: {} already exists, removing.".format(rw))
+        shutil.rmtree(rw)
+
+    shutil.copytree(ro, rw)
+
+    # format kliko arguments into simms arguments
+    fits_file = os.path.join(kliko.output_path, "wsclean")
+    cmd = [binary] + args + ["-tempdir", kliko.output_path, "-name", fits_file, rw]
+
+    # call the simms
+    print("KLIKO: calling {}".format(" ".join(cmd)))
+    subprocess.call(cmd)
+

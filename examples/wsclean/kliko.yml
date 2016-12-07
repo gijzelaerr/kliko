@@ -1,0 +1,23 @@
+schema_version: 3
+name: wsclean
+description: WSClean (w-stacking clean) is a fast generic widefield imager
+url: https://github.com/gijzelaerr/kliko/tree/master/examples/wsclean
+io: split
+
+sections:
+  -
+    name: parameters
+    description: WSClean paramaters
+    fields:
+        -
+          name: weight
+          label: weightmode
+          help_text: When using Briggs' weighting, add the robustness parameter
+          type: choice
+          initial: uniform
+          required: True
+          choices:
+              natural: natural
+              mwa: mwa
+              uniform: uniform
+              briggs: briggs
