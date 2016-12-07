@@ -22,7 +22,7 @@ def _dict2sha256(dict_):
     """
     make a hash of a non-nested dict
     """
-    return sha256(str(frozenset(dict_.items())).encode('utf-8')).hexdigest()
+    return sha256(str(frozenset(sorted(dict_.items()))).encode('utf-8')).hexdigest()
 
 
 def run_chain(steps, docker_client, kliko_dir=None):
