@@ -7,6 +7,7 @@ import json
 import os
 import sys
 import tempfile
+import logging
 from shutil import copyfile
 
 import docker
@@ -16,6 +17,9 @@ import yaml
 
 from kliko.docker import extract_params
 from kliko.validate import validate_kliko
+
+
+logger = logging.getLogger(__name__)
 
 
 def directory_exists(path):
@@ -210,7 +214,11 @@ def second_parser(argv, kliko_data):
 
 
 def kliko_runner(argv):
+    format = '%(asctime)-15s %(message)s'
+    logging.basicConfig(level=logging.INFO, format=format)
     image_name = first_parser(argv)
+
+    logger.info("* KERN starting image {}".format(image_name))
 
     config = docker.utils.kwargs_from_env()
     if 'tls' in config:
@@ -220,21 +228,31 @@ def kliko_runner(argv):
     try:
         raw_kliko_data = extract_params(docker_client, image_name)
     except requests.exceptions.ConnectionError:
-        print("Can't connect to docker daemon (config '%s')" % str(config))
+        logging.error("* KLIKO Can't connect to docker daemon (config '%s')" % str(config))
         exit(1)
     except docker.errors.NotFound:
-        print("Can't find docker image '%s'" % image_name)
+        logging.error("* KLIKO Can't find docker image '%s'" % image_name)
         exit(1)
 
     kliko_data = validate_kliko(yaml.safe_load(raw_kliko_data))
 
     parameters, input_path, output_path, work_path = second_parser(argv, kliko_data)
+    io = kliko_data['io']
     parameters_string = json.dumps(parameters)
     parameters_path, input_path, output_path, work_path, param_files_path = prepare_io(parameters_string,
-                                                                                       io=kliko_data['io'],
+                                                                                       io=io,
                                                                                        input_path=input_path,
                                                                                        output_path=output_path,
                                                                                        work_path=work_path)
+
+    logging.info("* KLIKO io: {}".format(io))
+    logging.info("* KLIKO parameters_path: {}".format(parameters_path))
+    logging.info("* KLIKO param_files_path: {}".format(param_files_path))
+    if io == "joined":
+        logging.info("* KLIKO work_path: {}".format(work_path))
+    else:
+        logging.info("* KLIKO input_path: {}".format(input_path))
+        logging.info("* KLIKO output_path: {}".format(output_path))
 
     files = []
     for section in kliko_data['sections']:
@@ -246,7 +264,7 @@ def kliko_runner(argv):
         if path:
             copyfile(path, os.path.join(param_files_path, fieldname))
 
-    if kliko_data['io'] == 'split':
+    if io == 'split':
         binds = [
             input_path + ':/input:ro',
             output_path + ':/output:rw',
@@ -264,14 +282,21 @@ def kliko_runner(argv):
     host_config = docker_client.create_host_config(binds=binds)
 
     container = docker_client.create_container(image=image_name, host_config=host_config, command='/kliko')
+    logger.info("* KLIKO container {} created from image {}".format(container['Id'], image_name))
     docker_client.start(container)
-    error_code = docker_client.wait(container)
+    logger.info("* KLIKO starting container {}".format(container['Id']))
     warnings = container.get('Warnings')
     if warnings:
         for warning in warnings:
-            print(warning)
-    stdout = docker_client.logs(container, stdout=True, stream=False).decode('utf-8')
+            logging.warning(warning)
+    for line in docker_client.logs(container, stdout=True, stderr=True, stream=True):
+        try:
+            logging.info(line.decode('utf-8')[:-1])  # decode and remove endline
+        except UnicodeEncodeError:
+            logging.error("* KLIKO utf8 decode error: " + str(line))
+    error_code = docker_client.wait(container)
+    logger.info("* KLIKO container {} finished, removing...".format(container['Id']))
     docker_client.remove_container(container)  # always clean up the container
-    print(stdout)
     if error_code != 0:
+        logging.error("* KLIKO container error code is {}".format(error_code))
         exit(1)
