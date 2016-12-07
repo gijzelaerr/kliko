@@ -164,5 +164,7 @@ def command_line_run(argv):
     raw_kliko_data = extract_params(docker_client, image_name)
     kliko_data = validate_kliko(yaml.safe_load(raw_kliko_data))
     parameters, input_path, output_path, work_path = second_parser(argv, kliko_data)
-    kliko_runner(kliko_data, parameters, input_path, output_path,
-                 work_path, docker_client, image_name)
+    kliko_runner(kliko_data=kliko_data, parameters=parameters,
+                 input_path=input_path, output_path=output_path,
+                 work_path=work_path, docker_client=docker_client,
+                 image_name=image_name)
