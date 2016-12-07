@@ -27,7 +27,16 @@ Command line interface generation
 Docker
 ======
 
-.. automodule:: kliko.docker
+.. automodule:: kliko.docker_util
+    :members:
+    :undoc-members:
+    :show-inheritance:
+
+
+Chaining
+========
+
+.. automodule:: kliko.chaining
     :members:
     :undoc-members:
     :show-inheritance:
