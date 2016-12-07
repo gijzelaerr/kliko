@@ -4,6 +4,7 @@ This is the simulator file. Is is ment to be called from
 inside a kliko container. 
 """
 import os
+import sys
 from kliko.validate import validate
 import kliko
 import subprocess
@@ -36,5 +37,8 @@ for msname in [i for i in os.listdir(kliko.input_path) if i.endswith(".MS")]:
             "=_tdl_job_1_simulate_MS"]
 
     # call the simms
-    subprocess.call(cmd)
+    error = subprocess.call(cmd)
+
+    if error != 0:
+        sys.exit(error)
 

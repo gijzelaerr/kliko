@@ -9,6 +9,7 @@ import kliko
 import subprocess
 import shutil
 from itertools import chain
+import sys
 
 binary = "/usr/bin/wsclean"
 
@@ -35,5 +36,8 @@ for msname in [i for i in os.listdir(kliko.input_path) if i.endswith(".MS")]:
 
     # call the simms
     print("KLIKO: calling {}".format(" ".join(cmd)))
-    subprocess.call(cmd)
+    error = subprocess.call(cmd)
+
+    if error != 0:
+        sys.exit(error)
 

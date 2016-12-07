@@ -4,6 +4,7 @@ This is the simms kliko file. Is is ment to be called from
 inside a kliko container. 
 """
 import os
+import sys
 from kliko.validate import validate
 import subprocess
 
@@ -19,5 +20,7 @@ parameters = validate()
 cmd = [binary] + ["--{}={}".format(k, v) for k, v in parameters.items() if v]
 
 # call the simms
-subprocess.call(cmd)
+error = subprocess.call(cmd)
+sys.exit(error)
+
 
