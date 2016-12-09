@@ -8,7 +8,7 @@ from shutil import copyfile
 logger = logging.getLogger(__name__)
 
 
-def prepare_io(parameters, io, input_path=False, output_path=False, work_path=False, param_files_path=False):
+def prepare_io(io, parameters={}, input_path=False, output_path=False, work_path=False, param_files_path=False):
     """
     args:
         parameters: A dict containing the parameters
@@ -21,6 +21,10 @@ def prepare_io(parameters, io, input_path=False, output_path=False, work_path=Fa
         tuple: (path to parameters file,  input, output, work, param_files)
     """
     here = os.getcwd()
+
+    if not parameters:
+        parameters = {}
+    parameters_string = json.dumps(parameters)
 
     if io == 'split':
         if not input_path:
@@ -56,15 +60,14 @@ def prepare_io(parameters, io, input_path=False, output_path=False, work_path=Fa
         parameters_file = open(parameters_path, 'w')
         param_files_path = tempfile.mkdtemp()
 
-    parameters_file.write(parameters)
+    parameters_file.write(parameters_string)
     parameters_file.close()
     return parameters_path, input_path, output_path, work_path, param_files_path
 
 
-def kliko_runner(kliko_data, parameters, docker_client, image_name, input_path=None, output_path=None, work_path=None):
+def kliko_runner(image_name, kliko_data, docker_client, parameters={}, input_path=None, output_path=None, work_path=None):
     io = kliko_data['io']
-    parameters_string = json.dumps(parameters)
-    parameters_path, input_path, output_path, work_path, param_files_path = prepare_io(parameters_string,
+    parameters_path, input_path, output_path, work_path, param_files_path = prepare_io(parameters=parameters,
                                                                                        io=io,
                                                                                        input_path=input_path,
                                                                                        output_path=output_path,
@@ -121,10 +124,9 @@ def kliko_runner(kliko_data, parameters, docker_client, image_name, input_path=N
             logging.error("utf8 decode error: " + str(line))
     error_code = docker_client.wait(container)
     logger.info("container {} finished, removing...".format(container['Id']))
-    docker_client.remove_container(container)  # always clean up the container
+    # docker_client.remove_container(container)  # always clean up the container
     if error_code != 0:
-        logging.error("kliko container returned error code {}".format(error_code))
-        raise Exception()
+        raise Exception("kliko container returned error code {}".format(error_code))
     else:
         logging.info("kliko container returned error code {}".format(error_code))
 

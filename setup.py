@@ -12,6 +12,7 @@ install_requires = [
 
 extras_require = {
     'django': ['django', 'django-form-utils'],
+    'luigi': ['luigi'],
 }
 
 scripts = [

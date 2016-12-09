@@ -47,7 +47,7 @@ def run_chain(steps, docker_client, kliko_dir=None):
     for image_name, parameters in steps:
         img_list = docker_client.images(name=image_name)
         if len(img_list) == 0:
-            raise Exception("image {} not found".format(img_list))
+            raise Exception("image {} not found, try to build or pull it".format(img_list))
         if len(img_list) > 1:
             raise Exception("image {} matches {} images".format(img_list, len(img_list)))
         docker_image = img_list[0]
