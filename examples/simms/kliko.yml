@@ -12,12 +12,13 @@ sections:
       -
         name: name
         label:  MS name
-        help_text: Measurement Met name. A name based on the observatoion will be generated otherwise.
+        help_text: Measurement Met name. A name based on the observation will be generated otherwise.
         type: str
       -
         name: tel
         label: telescope name
         type: str
+        required: true
       -
         name: dir
         type: str
