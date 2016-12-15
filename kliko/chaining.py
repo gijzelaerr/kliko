@@ -22,7 +22,7 @@ def _dict2sha256(dict_):
     """
     make a hash of a non-nested dict
     """
-    return sha256(str(frozenset(sorted(dict_.items()))).encode('utf-8')).hexdigest()
+    return sha256(str(sorted(dict_.items())).encode('utf-8')).hexdigest()
 
 
 def run_chain(steps, docker_client, kliko_dir=None):
@@ -90,14 +90,19 @@ def run_chain(steps, docker_client, kliko_dir=None):
                         "already finished! skipping.".format(image_name, short_id, short_para_hash))
             continue
 
+        paths = {
+            'parent': instance_path,
+            'work': work_path,
+            'input': input_path,
+            'output': output_path,
+        }
+
         logger.info("starting {} ({})".format(image_name, short_id))
         kliko_runner(kliko_data=kliko_data,
                      parameters=parameters,
-                     work_path=work_path,
-                     input_path=input_path,
-                     output_path=output_path,
                      docker_client=docker_client,
-                     image_name=image_name)
+                     image_name=image_name,
+                     paths=paths)
 
         open(finished_path, 'a').close()
         logger.info("{} ({}/{}) is finished!".format(image_name, short_id, short_para_hash))

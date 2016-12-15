@@ -9,16 +9,35 @@ from kliko.validate import validate_kliko
 import os
 from kliko.chaining import _dict2sha256, _mkdir_if_not_exists
 
+
+class FileParameter(luigi.Parameter):
+    """
+    Parameter whose value is a ``float``.
+    """
+
+    def parse(self, s):
+        path = str(s)
+        if os.path.exists(path):
+            return path
+        else:
+            raise ValueError("Invalid file - {} does not exists!")
+
+
 field_mapping = {
     'str': luigi.Parameter,
     'float': luigi.FloatParameter,
     'int': luigi.IntParameter,
     'choice': luigi.ChoiceParameter,
     'bool': luigi.BooleanParameter,
+    'file': FileParameter,
 }
 
 
-optional = object()
+class Optional:
+    def __repr__(self):
+        return "<optional>"
+
+optional = Optional()
 
 
 class KlikoTask(luigi.Task):
@@ -34,13 +53,15 @@ class KlikoTask(luigi.Task):
             for section in cls.kliko_data['sections']:
                 for field in section['fields']:
                     args = {}
-                    if not 'required' in field:
+                    if 'required' not in field:
                         args['default'] = optional
                         args['positional'] = False
                     if 'initial' in field:
                         args['default'] = field['initial']
                     if 'help_text' in field:
-                       args['description'] = field['help_text']
+                        args['description'] = field['help_text']
+                    if 'choices' in field:
+                        args['choices'] = field['choices']
                     param = field_mapping[field['type']](**args)
                     params.append((field['name'], param))
         return params
@@ -104,29 +125,23 @@ class KlikoTask(luigi.Task):
         instance_path = os.path.join(image_folder, short_para_hash)
         _mkdir_if_not_exists(instance_path)
 
+        """
         if kliko_data['io'] == 'split':
             input_path = os.path.join(instance_path, 'input')
-
             _mkdir_if_not_exists(input_path)
             output_path = os.path.join(instance_path, 'output')
             _mkdir_if_not_exists(output_path)
             work_path = None
-            previous_output = output_path
         if kliko_data['io'] == 'join':
-            if not previous_output:
-                work_path = os.path.join(instance_path, 'work')
-            else:
-                work_path = previous_output
+            work_path = os.path.join(instance_path, 'work')
             _mkdir_if_not_exists(work_path)
             input_path = None
             output_path = None
 
+        """
         kliko_runner(kliko_data=self.kliko_data,
                      parameters=self.param_kwargs,
                      docker_client=docker_client,
                      image_name=self.imagename(),
-                     work_path=work_path,
-                     input_path=input_path,
-                     output_path=output_path,
+                     paths={'parent': instance_path},
                      )
-

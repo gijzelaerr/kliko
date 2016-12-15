@@ -27,7 +27,7 @@ class TestCli(unittest.TestCase):
         parser = kliko.cli.generate_kliko_cli_parser(kliko_data)
 
     def test_prepare_io(self):
-        core.prepare_io(parameters=parameters_data, io='split', input_path=self.input_)
+        core.prepare_io(parameters=parameters_data, io='split', paths={'input':self.input_})
 
     def test_first_parser(self):
         with self.assertRaises(SystemExit):

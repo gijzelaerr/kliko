@@ -8,70 +8,88 @@ from shutil import copyfile
 logger = logging.getLogger(__name__)
 
 
-def prepare_io(io, parameters={}, input_path=False, output_path=False, work_path=False, param_files_path=False):
+def prepare_io(io, parameters={}, paths={}):
     """
     args:
         parameters: A dict containing the parameters
         io (str): split or join
-        input_path:  input path, defaults to $(pwd)/input
-        output_path: output path, defaults to $(pwd)/output
-        work_path: work path, defaults to $(pwd)/work
-        param_files_path: param_files_path path, defaults to $(pwd)/input
+        paths: dict of paths
     returns:
         tuple: (path to parameters file,  input, output, work, param_files)
     """
-    here = os.getcwd()
+
+    if 'parent' in paths:
+        parent = paths['parent']
+    else:
+        parent = os.getcwd()
 
     if not parameters:
         parameters = {}
     parameters_string = json.dumps(parameters)
 
     if io == 'split':
-        if not input_path:
-            input_path = os.path.join(here, 'input')
+        work_path = False
+        if 'input' not in paths or not paths['input']:
+            input_path = os.path.join(parent, 'input')
+        else:
+            input_path = paths['input']
 
         if not os.path.exists(input_path):
             raise IOError("input path '%s' doesn't exist" % input_path)
 
-        if not output_path:
-            output_path = os.path.join(here, 'output')
+        if 'output' not in paths or not paths['output']:
+            output_path = os.path.join(parent, 'output')
+        else:
+            output_path = paths['output']
 
         if not os.path.exists(output_path):
             os.mkdir(output_path)
 
     elif io == 'join':
-        if not work_path:
-            work_path = os.path.join(here, 'work')
+        input_path = False
+        output_path = False
+        if 'work' not in paths or not paths['work']:
+            work_path = os.path.join(parent, 'work')
+        else:
+            work_path = paths['work']
 
         if not os.path.exists(work_path):
             raise IOError("work path '%s' doesn't exist" % work_path)
 
-    if sys.platform == "darwin":
-        # tempfolder not mounted into docker virtual machine
-        parameters_path = os.path.join(here, 'parameters.json')
-        parameters_file = open(parameters_path, 'w')
-
-        if not param_files_path:
-            param_files_path = os.path.join(here, 'param_files')
-        if not os.path.exists(param_files_path):
-            os.mkdir(param_files_path)
+    if 'parameters' not in paths or not paths['parameters']:
+        parameters_path = os.path.join(parent, 'parameters.json')
     else:
-        _, parameters_path = tempfile.mkstemp()
-        parameters_file = open(parameters_path, 'w')
-        param_files_path = tempfile.mkdtemp()
+        parameters_path = paths['parameters']
 
+    parameters_file = open(parameters_path, 'w')
     parameters_file.write(parameters_string)
     parameters_file.close()
-    return parameters_path, input_path, output_path, work_path, param_files_path
+
+    if 'param_files' not in paths or not paths['param_files']:
+        param_files_path = os.path.join(parent, 'param_files')
+    else:
+        param_files_path = paths['parameters']
+
+    if not os.path.exists(param_files_path):
+        os.mkdir(param_files_path)
+
+    return parameters_path, input_path, output_path, work_path, parameters_path, param_files_path
 
 
-def kliko_runner(image_name, kliko_data, docker_client, parameters={}, input_path=None, output_path=None, work_path=None):
+def kliko_runner(image_name, kliko_data, docker_client, parameters={}, paths={}):
+    """
+
+    args:
+        image_name: docker image to run
+        kliko_data: parsed kliko data
+        docker_client: a docker client connection
+        parameters: dict with kliko paramaters
+        paths: dict with paths. Can contain input, output, work, parameters, param_files, parent
+    """
     io = kliko_data['io']
-    parameters_path, input_path, output_path, work_path, param_files_path = prepare_io(parameters=parameters,
-                                                                                       io=io,
-                                                                                       input_path=input_path,
-                                                                                       output_path=output_path,
-                                                                                       work_path=work_path)
+
+    final_paths = prepare_io(parameters=parameters, io=io, paths=paths)
+    parameters_path, input_path, output_path, work_path, param_files_path, param_files_path = final_paths
 
     logging.info("io: {}".format(io))
     logging.info("parameters_path: {}".format(parameters_path))
@@ -124,7 +142,10 @@ def kliko_runner(image_name, kliko_data, docker_client, parameters={}, input_pat
             logging.error("utf8 decode error: " + str(line))
     error_code = docker_client.wait(container)
     logger.info("container {} finished, removing...".format(container['Id']))
+
+    # TODO: disabled removal for now, what do we want?
     # docker_client.remove_container(container)  # always clean up the container
+
     if error_code != 0:
         raise Exception("kliko container returned error code {}".format(error_code))
     else:
