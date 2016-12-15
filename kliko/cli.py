@@ -158,7 +158,7 @@ def command_line_run(argv):
     format = '%(asctime)-15s %(message)s'
     logging.basicConfig(level=logging.INFO, format=format)
     image_name = first_parser(argv)
-    logger.info("* KERN starting image {}".format(image_name))
+    logger.info("starting image {}".format(image_name))
     config = docker.utils.kwargs_from_env()
     docker_client = docker.Client(**config)
     raw_kliko_data = extract_params(docker_client, image_name)
