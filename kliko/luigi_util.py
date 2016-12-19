@@ -46,10 +46,14 @@ class KlikoTask(luigi.Task):
     connection = None
 
     @classmethod
+    def get_param_values(cls, params, args, kwargs):
+        return [(k, v) for k, v in super().get_param_values(params, args, kwargs) if v != optional]
+
+    @classmethod
     def get_params(cls):
         params = []
-        if cls.imagename():
-            cls.kliko_data = cls.get_kliko_data(cls.imagename())
+        if cls.image_name():
+            cls.kliko_data = cls.get_kliko_data()
             for section in cls.kliko_data['sections']:
                 for field in section['fields']:
                     args = {}
@@ -66,17 +70,41 @@ class KlikoTask(luigi.Task):
                     params.append((field['name'], param))
         return params
 
+    @lru_cache()
+    def get_instance_path(self):
+        here = os.getcwd()
+        kliko_dir = os.path.join(here, ".kliko")
+        id_ = self.image_id()
+        short_id = id_[:12]
+
+        if not os.path.isdir(kliko_dir):
+            os.mkdir(kliko_dir)
+
+        image_folder = os.path.join(kliko_dir, short_id)
+        _mkdir_if_not_exists(image_folder)
+        para_hash = _dict2sha256(self.param_kwargs)
+        short_para_hash = para_hash[:12]
+
+        # don't make instance path yet, do this during run
+        instance_path = os.path.join(image_folder, short_para_hash)
+        return instance_path
+
     def output(self):
-        return luigi.LocalTarget('simms/FINISHED')
+        klikodata = self.get_kliko_data()
+        if klikodata['io'] == 'split':
+            return luigi.LocalTarget(self.get_instance_path() + '/output')
+        else:
+            return luigi.LocalTarget(self.get_instance_path() + '/work')
 
     @classmethod
     @abstractmethod
-    def imagename(cls):
+    def image_name(cls):
         pass
 
     @classmethod
     @lru_cache()
-    def image_id(cls, image_name):
+    def image_id(cls):
+        image_name = cls.image_name()
         connection = cls.connect()
 
         img_list = connection.images(name=image_name)
@@ -89,7 +117,8 @@ class KlikoTask(luigi.Task):
 
     @classmethod
     @lru_cache()
-    def get_kliko_data(cls, image_name):
+    def get_kliko_data(cls):
+        image_name = cls.image_name()
         connection = cls.connect()
         raw_kliko_data = extract_params(connection, image_name)
         kliko_data = validate_kliko(yaml.safe_load(raw_kliko_data))
@@ -104,44 +133,24 @@ class KlikoTask(luigi.Task):
     def run(self):
         docker_client = self.connect()
 
-        # hack to have optional arguments
-        for k, v in list(self.param_kwargs.items()):
-            if v == optional:
-                self.param_kwargs.pop(k)
+        instance_path = self.get_instance_path()
+        paths = {'parent': instance_path}
 
-        here = os.getcwd()
-        kliko_dir = os.path.join(here, ".kliko")
-        id_ = self.image_id(self.imagename())
-        short_id = id_[:12]
-
-        if not os.path.isdir(kliko_dir):
-            os.mkdir(kliko_dir)
-
-        kliko_data = self.get_kliko_data(self.imagename())
-        image_folder = os.path.join(kliko_dir, short_id)
-        _mkdir_if_not_exists(image_folder)
-        para_hash = _dict2sha256(self.param_kwargs)
-        short_para_hash = para_hash[:12]
-        instance_path = os.path.join(image_folder, short_para_hash)
         _mkdir_if_not_exists(instance_path)
 
-        """
-        if kliko_data['io'] == 'split':
-            input_path = os.path.join(instance_path, 'input')
-            _mkdir_if_not_exists(input_path)
-            output_path = os.path.join(instance_path, 'output')
-            _mkdir_if_not_exists(output_path)
-            work_path = None
-        if kliko_data['io'] == 'join':
-            work_path = os.path.join(instance_path, 'work')
-            _mkdir_if_not_exists(work_path)
-            input_path = None
-            output_path = None
+        input_ = self.input()
+        if input_:
+            if self.get_kliko_data()['io'] == 'split':
+                paths['input'] = input_.path
+            else:
+                paths['work'] = input_.path
 
-        """
         kliko_runner(kliko_data=self.kliko_data,
                      parameters=self.param_kwargs,
                      docker_client=docker_client,
-                     image_name=self.imagename(),
-                     paths={'parent': instance_path},
+                     image_name=self.image_name(),
+                     paths=paths,
                      )
+
+        finished_path = os.path.join(self.get_instance_path(), 'FINISHED')
+        open(finished_path, 'a').close()

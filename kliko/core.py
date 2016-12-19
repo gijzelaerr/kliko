@@ -35,7 +35,8 @@ def prepare_io(io, parameters={}, paths={}):
             input_path = paths['input']
 
         if not os.path.exists(input_path):
-            raise IOError("input path '%s' doesn't exist" % input_path)
+            logging.warning("input folder {} doesn't exist, creating...".format(input_path))
+            os.mkdir(input_path)
 
         if 'output' not in paths or not paths['output']:
             output_path = os.path.join(parent, 'output')
@@ -54,7 +55,8 @@ def prepare_io(io, parameters={}, paths={}):
             work_path = paths['work']
 
         if not os.path.exists(work_path):
-            raise IOError("work path '%s' doesn't exist" % work_path)
+            logging.warning("work folder {} doesn't exist, creating...".format(work_path))
+            os.mkdir(work_path)
 
     if 'parameters' not in paths or not paths['parameters']:
         parameters_path = os.path.join(parent, 'parameters.json')
