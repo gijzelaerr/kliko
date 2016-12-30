@@ -10,7 +10,7 @@ python:
  - 2.7
  - 3.4
  - 3.5
- - nightly
+ - 3.6
 
 matrix:
   allow_failures:
@@ -24,7 +24,7 @@ before_install:
  - pip install -r test/requirements.txt
 
 install:
- - pip install ".[django]"
+ - pip install ".[django,luigi]"
 
 script:
  - nosetests --with-coverage  --cover-package=kliko
