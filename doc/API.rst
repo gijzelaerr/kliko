@@ -32,6 +32,14 @@ Docker
     :undoc-members:
     :show-inheritance:
 
+Luigi
+=====
+
+.. automodule:: kliko.luigi_util
+    :members:
+    :undoc-members:
+    :show-inheritance:
+
 
 Chaining
 ========

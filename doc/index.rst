@@ -16,6 +16,7 @@ Contents:
    specification
    inside
    cli
+   chaining
    API
 
 

@@ -12,7 +12,7 @@ from kliko.chaining import _dict2sha256, _mkdir_if_not_exists
 
 class FileParameter(luigi.Parameter):
     """
-    Parameter whose value is a ``float``.
+    Parameter whose value is a ``path``.
     """
 
     def parse(self, s):
@@ -41,6 +41,10 @@ optional = Optional()
 
 
 class KlikoTask(luigi.Task):
+    """
+    A Luigi task that defines a Kliko task. Override the ``image_name`` method
+    to specify which kliko container to run.
+    """
     __metaclass__ = ABCMeta
 
     connection = None
