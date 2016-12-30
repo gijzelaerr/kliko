@@ -2,12 +2,12 @@
 Introduction
 ============
 
-KLIKO is a specification, validator and parser for the Scientific Compute Container specification. KLIKO is written in
+Kliko is a specification, validator and parser for the Scientific Compute Container specification. Kliko is written in
 Python.
 
 This documentation is intended for the developer who wants to package up a piece of software into a Kliko container.
 
-installation
+Installation
 ============
 
 Development of Kliko is done on `github <https://github.com/gijzelaerr/kliko>`_. You can install Kliko inside a docker
@@ -32,7 +32,7 @@ Kliko assumes your problem looks like this:
 
 .. image:: kliko.png
 
-Kliko containers can be chained up in a sequence, for example using `NextFlow <http://www.nextflow.io/>`_. An other
+Kliko containers can be chained up in a sequence, for example using `Luigi <http://luigi.readthedocs.io/>`_. An other
 use case is to simplify the parameterized scheduling of compute tasks using
 `RODRIGUES <https://github.com/ska-sa/rodrigues/>`_.
 

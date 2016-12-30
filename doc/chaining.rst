@@ -67,6 +67,11 @@ the Task dependencies using the ``requires()`` method. Here is an example::
             return AutoFlaggerTask()
 
 
+Which would look something like this in the Luigi web interface:
+
+.. image:: luigi.png
+
+
 Simple kliko chaining
 =====================
 
