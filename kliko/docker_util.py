@@ -33,8 +33,10 @@ def extract_params(docker_client, image_name):
             raise KlikoException(stdout.strip())
         return stdout
     except requests.exceptions.ConnectionError:
-        logging.error("* KLIKO Can't connect to docker daemon (config '%s')" % str(config))
-        exit(1)
+        msg = "can't connect to docker daemon"
+        logging.error(msg)
+        raise IOError(msg)
     except docker.errors.NotFound:
-        logging.error("* KLIKO Can't find docker image '%s'" % image_name)
-        exit(1)
+        msg = "Can't find docker image '{}'".format(image_name)
+        logging.error(msg)
+        raise IOError(msg)

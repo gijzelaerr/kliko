@@ -33,9 +33,13 @@ field_mapping = {
 }
 
 
-class Optional:
+class Optional(str):
+    """
+    A optional Luigiparameter.
+    """
     def __repr__(self):
         return "<optional>"
+    __str__ = __repr__
 
 optional = Optional()
 
@@ -46,22 +50,21 @@ class KlikoTask(luigi.Task):
     to specify which kliko container to run.
     """
     __metaclass__ = ABCMeta
-
     connection = None
 
     @classmethod
-    def get_param_values(cls, params, args, kwargs):
-        return [(k, v) for k, v in super().get_param_values(params, args, kwargs) if v != optional]
-
-    @classmethod
     def get_params(cls):
+        """
+        We override this so we can populate the param list with the Kliko configuration.
+        """
         params = []
         if cls.image_name():
             cls.kliko_data = cls.get_kliko_data()
             for section in cls.kliko_data['sections']:
                 for field in section['fields']:
                     args = {}
-                    if 'required' not in field:
+                    if not field.get('required', False):
+                        # if not required set default value to optional, we will filter this out later
                         args['default'] = optional
                         args['positional'] = False
                     if 'initial' in field:
@@ -76,6 +79,9 @@ class KlikoTask(luigi.Task):
 
     @lru_cache()
     def get_instance_path(self):
+        """
+        Each Kliko image and set of paramaters has its own private folder.
+        """
         here = os.getcwd()
         kliko_dir = os.path.join(here, ".kliko")
         id_ = self.image_id()
@@ -94,15 +100,23 @@ class KlikoTask(luigi.Task):
         return instance_path
 
     def output(self):
+        """
+        We create a .finished file to mark a task finished in a Kliko work/output folder. In the case of joined IO
+        the output folder is the same as the input folder. We add the kliko container ID to the finished file to
+        not confuse luigi. Don't forget to get the parent folder of the path returned by this output function.
+        """
         klikodata = self.get_kliko_data()
         if klikodata['io'] == 'split':
-            return luigi.LocalTarget(self.get_instance_path() + '/output')
+            return luigi.LocalTarget(self.get_instance_path() + '/output/.finished')
         else:
-            return luigi.LocalTarget(self.get_instance_path() + '/work')
+            return luigi.LocalTarget(os.path.dirname(self.input().path) + '/.finished-{}'.format(self.image_id()[:12]))
 
     @classmethod
     @abstractmethod
     def image_name(cls):
+        """
+        override this and return the kliko container name you want to use as a string .
+        """
         pass
 
     @classmethod
@@ -144,10 +158,11 @@ class KlikoTask(luigi.Task):
 
         input_ = self.input()
         if input_:
+            work = os.path.dirname(input_.path)
             if self.get_kliko_data()['io'] == 'split':
-                paths['input'] = input_.path
+                paths['input'] = work
             else:
-                paths['work'] = input_.path
+                paths['work'] = work
 
         kliko_runner(kliko_data=self.kliko_data,
                      parameters=self.param_kwargs,
@@ -156,5 +171,4 @@ class KlikoTask(luigi.Task):
                      paths=paths,
                      )
 
-        finished_path = os.path.join(self.get_instance_path(), 'FINISHED')
-        open(finished_path, 'a').close()
+        open(self.output().path, 'a').close()

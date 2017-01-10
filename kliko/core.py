@@ -96,7 +96,7 @@ def kliko_runner(image_name, kliko_data, docker_client, parameters={}, paths={})
     logging.info("io: {}".format(io))
     logging.info("parameters_path: {}".format(parameters_path))
     logging.info("param_files_path: {}".format(param_files_path))
-    if io == "joined":
+    if io == "join":
         logging.info("work_path: {}".format(work_path))
     else:
         logging.info("input_path: {}".format(input_path))
