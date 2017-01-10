@@ -20,7 +20,7 @@ class FileParameter(luigi.Parameter):
         if os.path.exists(path):
             return path
         else:
-            raise ValueError("Invalid file - {} does not exists!")
+            raise ValueError("Invalid file - {} does not exists!".format(path))
 
 
 field_mapping = {
