@@ -2,12 +2,12 @@ import luigi
 import docker
 from kliko.core import kliko_runner
 from abc import ABCMeta, abstractmethod
-from functools import lru_cache
 import yaml
 from kliko.docker_util import extract_params
 from kliko.validate import validate_kliko
 import os
 from kliko.chaining import _dict2sha256, _mkdir_if_not_exists
+from repoze.lru import lru_cache
 
 
 class FileParameter(luigi.Parameter):
@@ -77,7 +77,7 @@ class KlikoTask(luigi.Task):
                     params.append((field['name'], param))
         return params
 
-    @lru_cache()
+    @lru_cache(10)
     def get_instance_path(self):
         """
         Each Kliko image and set of paramaters has its own private folder.
@@ -120,7 +120,7 @@ class KlikoTask(luigi.Task):
         pass
 
     @classmethod
-    @lru_cache()
+    @lru_cache(10)
     def image_id(cls):
         image_name = cls.image_name()
         connection = cls.connect()
@@ -134,7 +134,7 @@ class KlikoTask(luigi.Task):
         return docker_image['Id'][7:]
 
     @classmethod
-    @lru_cache()
+    @lru_cache(10)
     def get_kliko_data(cls):
         image_name = cls.image_name()
         connection = cls.connect()

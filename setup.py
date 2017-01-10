@@ -1,6 +1,6 @@
 from setuptools import setup, find_packages
 
-__version__ = "0.7.1"
+__version__ = "0.8"
 
 
 install_requires = [
@@ -8,6 +8,7 @@ install_requires = [
     'future',
     'docopt',
     'docker-py',
+    'repoze.lru',
 ]
 
 extras_require = {
@@ -45,6 +46,7 @@ setup(
         "Programming Language :: Python :: 2.7",
         "Programming Language :: Python :: 3.4",
         "Programming Language :: Python :: 3.5",
+        "Programming Language :: Python :: 3.6",
         "Programming Language :: Python :: Implementation :: PyPy",
         "Topic :: Scientific/Engineering",
         "Topic :: Software Development :: Build Tools",

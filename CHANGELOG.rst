@@ -1,3 +1,9 @@
+0.8
+===
+
+* Add luigi support for chaining containers
+
+
 0.7.1
 =====
 
