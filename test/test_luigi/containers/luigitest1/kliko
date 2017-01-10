@@ -1,0 +1,13 @@
+#!/usr/bin/env python
+
+from __future__ import print_function
+import os
+import kliko
+from kliko.validate import validate
+
+# validate and parse the kliko arguments
+parameters = validate()
+
+print("parameters:" + str(parameters))
+os.chdir(kliko.output_path)
+open('luigitest1 was here', 'a').close()

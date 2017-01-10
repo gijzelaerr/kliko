@@ -1,0 +1,19 @@
+schema_version: 3
+name: kliko/luigitest2
+url: https://github.com/gijzelaerr/kliko
+io: join
+
+sections:
+  -
+    name: parameters
+    description: parameters
+    fields:
+      -
+        name: arg1
+        type: str
+        required: false
+      -
+        name: arg2
+        type: str
+        required: true
+
