@@ -28,7 +28,7 @@ field_mapping = {
     'float': luigi.FloatParameter,
     'int': luigi.IntParameter,
     'choice': luigi.ChoiceParameter,
-    'bool': luigi.BooleanParameter,
+    'bool': luigi.BoolParameter,
     'file': FileParameter,
 }
 
