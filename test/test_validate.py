@@ -47,3 +47,17 @@ class TestExample(unittest.TestCase):
         parameters_data = {'illegal_field': 'bla'}
         with self.assertRaises(SchemaError):
             kliko.validate.validate_parameters(parameters_data, kliko_data)
+
+    def test_param_file(self):
+        kliko_data = {
+                      'io': 'split',
+                      'description': 'test_param',
+                      'sections': [{'name': 'test_section',
+                                    'description': 'test section',
+                                    'fields': [{'name': 'param_file_test',
+                                                'type': 'file'}]
+                                    }]
+                      }
+        parameters_data = {'param_file_test': 'some_file'}
+        kliko.validate.validate_opened(kliko_data, parameters_data)
+

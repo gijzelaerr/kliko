@@ -1,11 +1,16 @@
 import json
 import logging
 import os
-import sys
-import tempfile
 from shutil import copyfile
 
 logger = logging.getLogger(__name__)
+
+
+def write_parameters_file(path, parameters):
+    parameters_string = json.dumps(parameters)
+    parameters_file = open(path, 'w')
+    parameters_file.write(parameters_string)
+    parameters_file.close()
 
 
 def prepare_io(io, parameters={}, paths={}):
@@ -25,7 +30,6 @@ def prepare_io(io, parameters={}, paths={}):
 
     if not parameters:
         parameters = {}
-    parameters_string = json.dumps(parameters)
 
     if io == 'split':
         work_path = False
@@ -63,10 +67,6 @@ def prepare_io(io, parameters={}, paths={}):
     else:
         parameters_path = paths['parameters']
 
-    parameters_file = open(parameters_path, 'w')
-    parameters_file.write(parameters_string)
-    parameters_file.close()
-
     if 'param_files' not in paths or not paths['param_files']:
         param_files_path = os.path.join(parent, 'param_files')
     else:
@@ -85,11 +85,11 @@ def kliko_runner(image_name, kliko_data, docker_client, parameters={}, paths={})
         image_name: docker image to run
         kliko_data: parsed kliko data
         docker_client: a docker client connection
-        parameters: dict with kliko paramaters
+        parameters: dict with kliko parameters
         paths: dict with paths. Can contain input, output, work, parameters, param_files, parent
     """
-    io = kliko_data['io']
 
+    io = kliko_data['io']
     final_paths = prepare_io(parameters=parameters, io=io, paths=paths)
     parameters_path, input_path, output_path, work_path, param_files_path, param_files_path = final_paths
 
@@ -102,15 +102,15 @@ def kliko_runner(image_name, kliko_data, docker_client, parameters={}, paths={})
         logging.info("input_path: {}".format(input_path))
         logging.info("output_path: {}".format(output_path))
 
-    files = []
     for section in kliko_data['sections']:
         for field in section['fields']:
             if field['type'] == 'file':
-                files.append((field['name'], parameters[field['name']]))
+                fieldname = field['name']
+                path = parameters[field['name']]
+                copyfile(path, os.path.join(param_files_path, fieldname))
+                parameters[fieldname] = '/param_files/' + fieldname
 
-    for fieldname, path in files:
-        if path:
-            copyfile(path, os.path.join(param_files_path, fieldname))
+    write_parameters_file(parameters_path, parameters)
 
     if io == 'split':
         binds = [
