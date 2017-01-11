@@ -1,5 +1,4 @@
 from kliko.luigi_util import KlikoTask
-import luigi
 
 
 class LuigiTest1(KlikoTask):
