@@ -10,7 +10,7 @@ from kliko import kliko_file as kliko_file_default
 
 here = os.path.dirname(os.path.realpath(__file__))
 
-SCHEMA_VERSION = 3
+SCHEMA_VERSION = 4
 
 
 def validate_kliko(kliko, version=SCHEMA_VERSION):
@@ -29,7 +29,8 @@ def validate_kliko(kliko, version=SCHEMA_VERSION):
     # first try to parse it, to make sure it is parsable
 
     schema_file = os.path.join(here, "schemas/%s.yml" % version)
-    c = Core(source_data=kliko, schema_files=[schema_file])
+    extensions = [os.path.join(here, "schemas/validators.py")]
+    c = Core(source_data=kliko, schema_files=[schema_file], extensions=extensions)
     c.validate(raise_exception=True)
     return kliko
 

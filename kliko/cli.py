@@ -116,7 +116,7 @@ Note that you still need to download (docker pull) or build the Kliko image your
 
     parser = argparse.ArgumentParser(description='Kliko image runner', epilog=epilogue)
     parser.add_argument('image_name', type=str, help='Kliko image you want to run')
-    help = 'Kliko parameters. Run --help after image_name to retreive list from image'
+    help = 'Kliko parameters. Run --help after image_name to retrieve list from image'
     parser.add_argument('IMAGE OPTIONS', type=str, nargs='*', help=help)
 
     parsed = parser.parse_args(argv[1:2])
