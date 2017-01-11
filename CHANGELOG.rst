@@ -1,7 +1,10 @@
 0.8
 ===
 
-* Add luigi support for chaining containers
+* Add luigi support for chaining containers (#18)
+* create temp files in work folder (#19)
+* properly expose param_files path in paramaters file (#21)
+* Small bug fixes
 
 
 0.7.1
