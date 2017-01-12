@@ -22,6 +22,12 @@ import os
 sys.path.insert(0, os.path.abspath('..'))
 from kliko import __version__
 
+
+# required for django autodoc
+os.environ['DJANGO_SETTINGS_MODULE'] = 'test.test_settings'
+import django
+django.setup()
+
 # -- General configuration ------------------------------------------------
 
 # If your documentation needs a minimal Sphinx version, state it here.

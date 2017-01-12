@@ -45,3 +45,7 @@ deploy:
     tags: true
     distributions: sdist bdist_wheel
     repo: gijzelaerr/kliko
+
+matrix:
+  allow_failures:
+    - python: pypy

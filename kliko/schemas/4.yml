@@ -1,0 +1,84 @@
+name: compute container schema definition (version 4)
+desc: this is used to validate json and yaml input schema's for compute containers
+
+schema;fields:
+  type: map
+  mapping:
+    name:
+      type: str
+      required: True
+    type:
+      type: str
+      required: True
+      enum: ['choice', 'str', 'float', 'file', 'bool', 'int', 'List[int]', 'List[bool]', 'List[file]', 'List[float]', 'List[str]']
+    initial:
+      type: any
+      required: False
+    max_length:
+      type: int
+      required: False
+    choices:
+      type: map
+      required: False
+      mapping:
+        regex;(.*):
+          type: str
+    label:
+      type: str
+      required: False
+    help_text:
+      type: str
+      required: False
+    required:
+      type: bool
+      required: False
+
+
+type: map
+mapping:
+  schema_version:
+    type: int
+    required: True
+  author:
+    type: str
+    required: False
+  name:
+    type: str
+    required: False
+  description:
+    type: str
+    required: False
+  container:
+    type: str
+    pattern: .+/.+
+    required: False
+  email:
+    type: str
+    pattern: .+@.+
+    required: False
+  url:
+    type: str
+    pattern: https?:\/\/(www\.)?[-a-zA-Z0-9@:%._\+~#=]{2,256}\.[a-z]{2,6}\b([-a-zA-Z0-9@:%_\+.~#?&//=]*)
+    required: False
+  io:
+    type: str
+    required: True
+    enum: ['split', 'join']
+  sections:
+    type: seq
+    matching: "any"
+    required: False
+    sequence:
+      - type: map
+        mapping:
+          name:
+            type: str
+            required: True
+          description:
+            type: str
+            required: True
+          fields:
+            type: seq
+            required: True
+            sequence:
+              - include: fields

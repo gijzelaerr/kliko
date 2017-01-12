@@ -5,12 +5,13 @@ from pykwalify.core import Core
 import yaml
 import json
 import os
+import re
 from kliko import parameters_file as parameters_file_default
 from kliko import kliko_file as kliko_file_default
 
 here = os.path.dirname(os.path.realpath(__file__))
 
-SCHEMA_VERSION = 3
+SCHEMA_VERSION = 4
 
 
 def validate_kliko(kliko, version=SCHEMA_VERSION):
@@ -34,6 +35,15 @@ def validate_kliko(kliko, version=SCHEMA_VERSION):
     return kliko
 
 
+list_regex = re.compile('List\[(int|float|bool|file|str)\]')
+
+type_map = {
+    'choice': 'str',
+    'char': 'str',
+    'file': 'str',
+}
+
+
 def convert_to_parameters_schema(kliko):
     """
     Convert a kliko schema into a validator for the parameters generated with a kliko schema.
@@ -43,21 +53,25 @@ def convert_to_parameters_schema(kliko):
     returns:
         A structure for a pykwalify validator
     """
-
-    type_map = {
-        'choice': 'str',
-        'char': 'str',
-        'file': 'str',
-    }
-
     mapping = {}
 
     for section in kliko['sections']:
         for field in section['fields']:
-            # TODO: we can't define multiple types:
-            # https://github.com/Grokzen/pykwalify/issues/39
-            # type_ = type_map.get(field['type'], field['type'])
-            value = {'type': 'any', 'required': 'required' in field}
+            value = {'required': 'required' in field}
+
+            # check if field is a list
+            match = list_regex.match(field['type'])
+            if match:
+                value['type'] = 'seq'
+                matchtype = match.group(1)
+                value['sequence'] = [{'type': type_map.get(matchtype, matchtype)}]
+            # otherwise check if it is a choice
+            elif field['type'] == 'choice':
+                value['type'] = 'str'
+                value['enum'] = list(field['choices'].keys())
+            else:
+                value['type'] = type_map.get(field['type'], field['type'])
+
             mapping[field['name']] = value
 
     return {'type': 'map', 'mapping': mapping}

@@ -1,6 +1,6 @@
 from setuptools import setup, find_packages
 
-__version__ = "0.8"
+__version__ = "0.9pre"
 
 
 install_requires = [
@@ -12,7 +12,7 @@ install_requires = [
 ]
 
 extras_require = {
-    'django': ['django', 'django-form-utils'],
+    'django': ['django>1.8', 'django-form-utils', 'psycopg2'],
     'luigi': ['luigi'],
 }
 
