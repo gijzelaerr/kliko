@@ -5,6 +5,7 @@ from pykwalify.core import Core
 import yaml
 import json
 import os
+import re
 from kliko import parameters_file as parameters_file_default
 from kliko import kliko_file as kliko_file_default
 
@@ -29,11 +30,18 @@ def validate_kliko(kliko, version=SCHEMA_VERSION):
     # first try to parse it, to make sure it is parsable
 
     schema_file = os.path.join(here, "schemas/%s.yml" % version)
-    extensions = [os.path.join(here, "schemas/validators.py")]
-    c = Core(source_data=kliko, schema_files=[schema_file], extensions=extensions)
+    c = Core(source_data=kliko, schema_files=[schema_file])
     c.validate(raise_exception=True)
     return kliko
 
+
+list_regex = re.compile('List\[(int|float|bool|file|str)\]')
+
+type_map = {
+    'choice': 'str',
+    'char': 'str',
+    'file': 'str',
+}
 
 def convert_to_parameters_schema(kliko):
     """
@@ -44,21 +52,25 @@ def convert_to_parameters_schema(kliko):
     returns:
         A structure for a pykwalify validator
     """
-
-    type_map = {
-        'choice': 'str',
-        'char': 'str',
-        'file': 'str',
-    }
-
     mapping = {}
 
     for section in kliko['sections']:
         for field in section['fields']:
-            # TODO: we can't define multiple types:
-            # https://github.com/Grokzen/pykwalify/issues/39
-            # type_ = type_map.get(field['type'], field['type'])
-            value = {'type': 'any', 'required': 'required' in field}
+            value = {'required': 'required' in field}
+
+            # check if field is a list
+            match = list_regex.match(field['type'])
+            if match:
+                value['type'] = 'seq'
+                matchtype = match.group(1)
+                value['sequence'] = [{'type': type_map.get(matchtype, matchtype)}]
+            # otherwise check if it is a choice
+            elif field['type'] == 'choice':
+                value['type'] = 'str'
+                value['enum'] = list(field['choices'].keys())
+            else:
+                value['type'] = type_map.get(field['type'], field['type'])
+
             mapping[field['name']] = value
 
     return {'type': 'map', 'mapping': mapping}
@@ -106,7 +118,6 @@ def validate(kliko_file=False, paramaters_file=False):
         parameters = json.load(f)
 
     return validate_opened(kliko, parameters)
-
 
 def validate_opened(kliko, parameters):
     validate_kliko(kliko)

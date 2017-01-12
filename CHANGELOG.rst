@@ -1,3 +1,9 @@
+0.9
+===
+
+* Made type checking in parameters file more strict
+* Added support for list types, List[int], List[bool], List[file], List[float] and List[str] (#22)
+
 0.8
 ===
 

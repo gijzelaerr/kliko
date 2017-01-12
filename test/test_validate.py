@@ -50,6 +50,7 @@ class TestExample(unittest.TestCase):
 
     def test_param_file(self):
         kliko_data = {
+                      'schema_version': 4,
                       'io': 'split',
                       'description': 'test_param',
                       'sections': [{'name': 'test_section',

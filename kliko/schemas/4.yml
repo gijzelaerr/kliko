@@ -11,7 +11,6 @@ schema;fields:
       type: str
       required: True
       enum: ['choice', 'str', 'float', 'file', 'bool', 'int', 'List[int]', 'List[bool]', 'List[file]', 'List[float]', 'List[str]']
-      func: type_validator
     initial:
       type: any
       required: False
@@ -52,7 +51,7 @@ mapping:
   container:
     type: str
     pattern: .+/.+
-    required: True
+    required: False
   email:
     type: str
     pattern: .+@.+
