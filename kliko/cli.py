@@ -7,11 +7,13 @@ import argparse
 import logging
 import os
 import yaml
+import re
 
 import docker
 from kliko.core import kliko_runner
 from kliko.docker_util import extract_params
 from kliko.validate import validate_kliko
+from kliko.exceptions import KlikoException
 
 logger = logging.getLogger(__name__)
 
@@ -30,6 +32,9 @@ def file_exists(path):
     if not os.path.isfile(path):
         raise argparse.ArgumentTypeError("file doesn't exists: '%s'" % path)
     return path
+
+
+list_regex = re.compile('List\[(int|float|bool|file|str)\]')
 
 
 def generate_kliko_cli_parser(kliko_data, parent_parser=None):
@@ -62,15 +67,22 @@ def generate_kliko_cli_parser(kliko_data, parent_parser=None):
             kwargs = {'dest': field['name']}
 
             type_ = field['type']
+            listmatch = list_regex.match(type_)
+            if listmatch:
+                type_ = listmatch.group(1)
+                kwargs['nargs'] = '+'
+
             if type_ in ('float', 'bool', 'int'):
-                kwargs['type'] = eval(field['type'])
-            elif type_ == 'char':
+                kwargs['type'] = eval(type_)
+            elif type_ == 'str':
                 kwargs['type'] = str
             elif type_ == 'file':
                 kwargs['type'] = file_exists
             elif type_ == 'choice':
                 kwargs['type'] = str
                 kwargs['choices'] = field['choices']
+            else:
+                raise KlikoException("unknown field type {} for field {}".format(type_, field['name']))
 
             help = ""
 

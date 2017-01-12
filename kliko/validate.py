@@ -43,6 +43,7 @@ type_map = {
     'file': 'str',
 }
 
+
 def convert_to_parameters_schema(kliko):
     """
     Convert a kliko schema into a validator for the parameters generated with a kliko schema.
@@ -118,6 +119,7 @@ def validate(kliko_file=False, paramaters_file=False):
         parameters = json.load(f)
 
     return validate_opened(kliko, parameters)
+
 
 def validate_opened(kliko, parameters):
     validate_kliko(kliko)

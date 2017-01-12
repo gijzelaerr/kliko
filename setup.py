@@ -12,7 +12,7 @@ install_requires = [
 ]
 
 extras_require = {
-    'django': ['django', 'django-form-utils'],
+    'django': ['django>1.8', 'django-form-utils', 'psycopg2'],
     'luigi': ['luigi'],
 }
 
