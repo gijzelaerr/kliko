@@ -22,6 +22,7 @@ before_install:
  - popd
  - pip install docker-py==1.5.0   # travis docker has API version 1.20 
  - pip install -r test/requirements.txt
+ - apt-get install postgresql-server-dev-all
 
 install:
  - pip install ".[django,luigi]"
